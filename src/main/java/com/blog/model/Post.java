@@ -3,6 +3,7 @@ package com.blog.model;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = "postId")
 public class Post {
 
-    private Long postId;
+    private UUID postId;
 
     private String title;
 
@@ -20,5 +21,5 @@ public class Post {
 
     private LocalDateTime createdAt;
 
-    private Long userId;
+    private UUID userId;
 }

@@ -3,6 +3,7 @@ package com.blog.model;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,13 +13,13 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = "commentId")
 public class Comment {
 
-    private Long commentId;
+    private UUID commentId;
 
     private String content;
 
     private LocalDateTime createdAt;
 
-    private Long userId;
+    private UUID userId;
 
-    private Long postId;
+    private UUID postId;
 }

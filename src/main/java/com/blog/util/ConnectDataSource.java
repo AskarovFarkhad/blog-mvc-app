@@ -28,7 +28,7 @@ public class ConnectDataSource {
         try {
             Properties dbProperties = initProperties();
             DriverManager.registerDriver(new Driver());
-            return Optional.ofNullable( DriverManager.getConnection(
+            return Optional.ofNullable(DriverManager.getConnection(
                     dbProperties.getProperty("spring.datasource.url"),
                     dbProperties.getProperty("spring.datasource.username"),
                     dbProperties.getProperty("spring.datasource.password")));

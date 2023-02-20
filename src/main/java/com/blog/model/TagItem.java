@@ -2,6 +2,8 @@ package com.blog.model;
 
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Builder
@@ -10,7 +12,7 @@ import lombok.*;
 @EqualsAndHashCode(of = "tagId")
 public class TagItem {
 
-    private Long tagId;
+    private UUID tagId;
 
     private String name;
 }

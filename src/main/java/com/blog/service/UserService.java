@@ -6,12 +6,11 @@ import com.blog.model.User;
 import com.blog.repository.UserRepository;
 import com.blog.util.ConverterSetUsers;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +23,11 @@ public class UserService {
     @Transactional
     public int save(UserDto dto) {
         User user = mapper.toUser(dto);
+        user.setUserId(UUID.randomUUID());
         return repository.save(user);
     }
 
-    public List<UserDto> getAllUsers() throws SQLException {
+    public List<UserDto> getAllUsers() {
         return ConverterSetUsers.covertSetToList(repository.getAll());
     }
 }

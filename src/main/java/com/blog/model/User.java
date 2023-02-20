@@ -2,6 +2,8 @@ package com.blog.model;
 
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Builder
@@ -10,7 +12,7 @@ import lombok.*;
 @EqualsAndHashCode(of = "userId")
 public class User {
 
-    private Long userId;
+    private UUID userId;
 
     private String userName;
 

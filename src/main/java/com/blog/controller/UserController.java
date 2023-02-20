@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -49,7 +51,9 @@ public class UserController {
     }
 
     @GetMapping()
-    public String getAllUsers() {
+    public String getAllUsers(Model model) {
+        List<UserDto> users = service.getAllUsers();
+        model.addAttribute("users", users);
         return "user/get-all-users";
     }
 
