@@ -20,7 +20,6 @@ public class UserService {
 
     private final UserMapper mapper;
 
-    @Transactional
     public int save(UserDto dto) {
         User user = mapper.toUser(dto);
         user.setUserId(UUID.randomUUID());

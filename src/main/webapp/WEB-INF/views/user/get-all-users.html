@@ -8,6 +8,7 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
         }
+
         table {
             margin: 20px auto;
             border-collapse: collapse;
@@ -17,34 +18,73 @@
             max-width: 800px;
             width: 100%;
         }
+
         th, td {
             padding: 10px;
             border: 1px solid #ccc;
         }
+
         th {
             background-color: #4CAF50;
             color: #fff;
         }
+
         tr:nth-child(even) {
             background-color: #f2f2f2;
+        }
+
+        .button-link {
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .button-link:hover {
+            background-color: #3e8e41;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
-<h2>Получение всех пользователей</h2>
-<table>
-    <thead>
-    <tr>
-        <th>Имя пользователя</th>
-        <th>Email</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.username}">Пользователь</td>
-        <td th:text="${user.email}">Email</td>
-    </tr>
-    </tbody>
+<div class="container">
+    <h1>Все пользователи</h1>
+</div>
+    <table>
+        <thead>
+        <tr>
+            <th>Имя пользователя</th>
+            <th>Email</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.getUserName()}">Пользователь</td>
+            <td th:text="${user.getEmail()}">Email</td>
+            <td>
+                <a class="button-link" th:href="@{/public/api/v1/users/{userId}/edit(userId=${user.getUserId()})}">Изменить</a>
+                <a class="button-link"
+                   th:href="@{/public/api/v1/users/{userId}(userId=${user.getUserId()})}">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
 </table>
 </body>
 </html>

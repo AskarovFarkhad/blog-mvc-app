@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -18,13 +19,13 @@ public class UserController {
 
     private final UserService service;
 
-    @GetMapping("/main")
+    @GetMapping()
     public String getMainWindow() {
-        return "user/main-window";
+        return "main-blog";
     }
 
     @GetMapping("/new")
-    public String getCreateUserWindow(Model model) {
+    public String createUser(Model model) {
         model.addAttribute("user", new UserDto());
         return "user/create-user";
     }
@@ -32,33 +33,31 @@ public class UserController {
     @PostMapping()
     public String createUser(@ModelAttribute("user") UserDto dto) {
         service.save(dto);
-        return "user/get-all-users";
+        return "redirect:/public/api/v1/users";
     }
 
     @GetMapping("/{userId}/edit")
-    public String getUpdateUserWindow() {
+    public String update(@PathVariable("userId") UUID userId) {
+        // TODO реализовать
         return "";
     }
 
     @PatchMapping("/{userId}")
-    public String updateUser() {
+    public String updateUser(@PathVariable("userId") UUID userId) {
+        // TODO реализовать
         return "";
     }
 
     @DeleteMapping("/{userId}")
-    public String deleteUser() {
+    public String deleteUser(@PathVariable("userId") UUID userId) {
+        // TODO реализовать
         return "";
     }
 
-    @GetMapping()
+    @GetMapping("/all")
     public String getAllUsers(Model model) {
         List<UserDto> users = service.getAllUsers();
         model.addAttribute("users", users);
         return "user/get-all-users";
-    }
-
-    @GetMapping("/{userId}")
-    public String getUserByUserId() {
-        return "";
     }
 }

@@ -80,13 +80,32 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+
+        .button-link {
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .button-link:hover {
+            background-color: #3e8e41;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Главная страница</h1>
     <div>
-        <a href="/public/api/v1/users/new" class="button">Регистрация</a>
+        <a href="/public/api/v1/users/new" class="button-link">Регистрация</a>
+        <a href="/public/api/v1/users/all" class="button-link">Все пользователи</a>
+        <a href="/public/api/v1/posts/new" class="button-link">Добавить пост</a>
     </div>
     <form action="#" method="post" th:action="@{/post}" th:object="${post}">
         <label for="title">Название поста</label>
