@@ -10,13 +10,13 @@ CREATE TABLE users
 );
 
 -- Создаем таблицу "posts" для хранения информации о постах
-create TABLE posts
+CREATE TABLE posts
 (
     post_id    UUID PRIMARY KEY,
     title      VARCHAR(100) NOT NULL,
     content    TEXT,
     created_at TIMESTAMP    NOT NULL,
-    user_id    UUID          NOT NULL REFERENCES users (user_id)
+    user_id    UUID          NOT NULL REFERENCES users (user_id) ON DELETE CASCADE
 );
 
 -- Создаем таблицу "comments" для хранения информации о комментариях

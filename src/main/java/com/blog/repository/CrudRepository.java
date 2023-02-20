@@ -15,8 +15,4 @@ public interface CrudRepository<T> {
     int update(T entity) throws SQLException;
 
     int delete(UUID uuid) throws SQLException;
-
-    int deleteById(int id) throws SQLException;
-
-    int deleteAll() throws SQLException;
 }

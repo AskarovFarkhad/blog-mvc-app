@@ -8,6 +8,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "postId")
@@ -21,5 +22,5 @@ public class Post {
 
     private LocalDateTime createdAt;
 
-    private UUID userId;
+    private UUID author;
 }

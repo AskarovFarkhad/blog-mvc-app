@@ -1,5 +1,6 @@
 package com.blog.util;
 
+import com.blog.dto.PostDto;
 import com.blog.dto.UserDto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,5 +44,37 @@ public class ConverterSetUsers {
             log.info(e.getMessage());
         }
         return userDto;
+    }
+
+    public static List<PostDto> convertSetPostToList(ResultSet resultSet) {
+        List<PostDto> posts = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+                posts.add(PostDto.builder()
+                                .title(resultSet.getString("title"))
+                                .content(resultSet.getString("content"))
+                                .createdAt(resultSet.getTimestamp("created_at").toLocalDateTime())
+                        .build());
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+        return posts;
+    }
+
+    public static PostDto convertSetToPostDto(ResultSet resultSet) {
+        PostDto postDto = null;
+        try {
+            while (resultSet.next()) {
+                postDto = PostDto.builder()
+                        .title(resultSet.getString("title"))
+                        .content(resultSet.getString("content"))
+                        .createdAt(resultSet.getTimestamp("created_at").toLocalDateTime())
+                        .build();
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+        return postDto;
     }
 }

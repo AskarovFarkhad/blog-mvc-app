@@ -19,11 +19,6 @@ public class UserController {
 
     private final UserService service;
 
-    @GetMapping()
-    public String getMainWindow() {
-        return "main-blog";
-    }
-
     @GetMapping("/new")
     public String createUser(Model model) {
         model.addAttribute("user", new UserDto());
@@ -33,13 +28,12 @@ public class UserController {
     @PostMapping()
     public String createUser(@ModelAttribute("user") UserDto dto) {
         service.save(dto);
-        return "redirect:/public/api/v1/users";
+        return "redirect:/public/api/v1/posts";
     }
 
     @GetMapping("/{userId}/edit")
     public String updateUser(@PathVariable("userId") UUID userId, Model model) {
-        UserDto userDto = service.getById(userId);
-        model.addAttribute("user", userDto);
+        model.addAttribute("user", service.getById(userId));
         return "user/update-user";
     }
 

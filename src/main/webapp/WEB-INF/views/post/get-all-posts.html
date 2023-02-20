@@ -68,7 +68,9 @@
         }
 
         th, td {
-            padding: 10px;
+            text-align: left;
+            padding: 8px;
+            word-wrap: break-word;
             border: 1px solid #ccc;
         }
 
@@ -97,6 +99,7 @@
         .button-link:hover {
             background-color: #3e8e41;
         }
+
     </style>
 </head>
 <body>
@@ -105,20 +108,28 @@
     <div>
         <a href="/public/api/v1/users/new" class="button-link">Регистрация</a>
         <a href="/public/api/v1/users/all" class="button-link">Все пользователи</a>
-        <a href="/public/api/v1/posts/new" class="button-link">Добавить пост</a>
     </div>
-    <form action="#" method="post" th:action="@{/post}" th:object="${post}">
-        <label for="title">Название поста</label>
+
+    <form th:method="POST" th:action="@{/public/api/v1/posts}" th:object="${post}">
+        <label for="title">Название:</label>
         <input type="text" id="title" name="title" th:field="*{title}">
-        <label for="content">Текст поста</label>
+        <label for="content">Текст:</label>
         <textarea id="content" name="content" th:field="*{content}"></textarea>
+        <label for="author">Автор:</label>
+        <select class="form-control" id="author" name="author" th:field="*{author}">
+            <option value="">Выберите автора</option>
+            <option th:each="author : ${authors}" th:value="${author.getUserId()}"
+                    th:text="${author.getUserName()}"></option>
+        </select>
+        <br><br>
         <button type="submit">Опубликовать</button>
     </form>
+
     <table>
         <thead>
         <tr>
-            <th>Название поста</th>
-            <th>Текст поста</th>
+            <th>Название</th>
+            <th>Текст</th>
             <th>Автор</th>
             <th>Дата публикации</th>
             <th>Действия</th>
@@ -126,12 +137,15 @@
         </thead>
         <tbody>
         <tr th:each="post : ${posts}">
-            <td th:text="${post.title}"></td>
-            <td th:text="${post.content}"></td>
-            <td th:text="${post.author}"></td>
-            <td th:text="${#dates.format(post.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+            <td th:text="${post.getTitle()}"></td>
+            <td th:text="${post.getContent()}"></td>
+            <td th:text="${post.getAuthor()}"></td>
+            <td th:text="${#temporals.format(post.getCreatedAt(), 'dd.MM.yyyy HH:mm')}"></td>
             <td>
-                <a th:href="@{/post/{id}/delete(id=${post.id})}" class="button">Удалить</a>
+                <form th:method="DELETE"
+                      th:action="@{/public/api/v1/posts/{postId}(postId=${post.getPostId()})}">
+                    <input class="button-link" type="submit" value="Удалить">
+                </form>
             </td>
         </tr>
         </tbody>

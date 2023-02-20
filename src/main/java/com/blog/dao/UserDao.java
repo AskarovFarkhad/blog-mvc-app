@@ -1,6 +1,7 @@
-package com.blog.repository;
+package com.blog.dao;
 
 import com.blog.model.User;
+import com.blog.repository.CrudRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @Slf4j
 @Repository
-public class UserRepository implements CrudRepository<User> {
+public class UserDao implements CrudRepository<User> {
 
     public Connection connectionDB() {
         try {
@@ -34,7 +35,7 @@ public class UserRepository implements CrudRepository<User> {
                     .createStatement()
                     .executeQuery("SELECT * FROM users");
         } catch (Exception e) {
-            log.error("Ошибка при получении полного списка: " + e.getCause());
+            log.error("An exception was thrown while working with the database: " + e.getMessage());
             return null;
         }
     }
@@ -46,7 +47,7 @@ public class UserRepository implements CrudRepository<User> {
                     .createStatement()
                     .executeQuery("SELECT * FROM users WHERE user_id = '" + id + "'");
         } catch (SQLException | IndexOutOfBoundsException e) {
-            log.error("Ошибка при поиске человека по ID: " + e.getCause());
+            log.error("An exception was thrown while working with the database: " + e.getMessage());
             return null;
         }
     }
@@ -60,7 +61,7 @@ public class UserRepository implements CrudRepository<User> {
                             " VALUES ('" + user.getUserId() + "', '" + user.getUserName() + "', '" + user.getEmail() +
                             "', '" + user.getPassword() + "', '" + user.isDeleted() + "', '" + user.isAdmin() + "')");
         } catch (SQLException e) {
-            log.error("Ошибка при добавлении человека в СУБД: " + e.getCause());
+            log.error("An exception was thrown while working with the database: " + e.getMessage());
             return 0;
         }
     }
@@ -70,11 +71,11 @@ public class UserRepository implements CrudRepository<User> {
         try (Connection connection = connectionDB()) {
             return connection
                     .createStatement()
-                    .executeUpdate("UPDATE users SET " +
-                            "username = '" + user.getUserName() + "', email = '" + user.getEmail() +
+                    .executeUpdate("UPDATE users SET username = '" + user.getUserName() +
+                            "', email = '" + user.getEmail() +
                             "', password = '" + user.getPassword() + "' WHERE user_id = '" + user.getUserId() + "'");
         } catch (SQLException e) {
-            log.error("Ошибка при добавлении человека в СУБД: " + e.getCause());
+            log.error("An exception was thrown while working with the database: " + e.getMessage());
             return 0;
         }
     }
@@ -86,31 +87,7 @@ public class UserRepository implements CrudRepository<User> {
                     .createStatement()
                     .executeUpdate("DELETE FROM users WHERE user_id = '" + id + "'");
         } catch (SQLException e) {
-            log.error("Ошибка при удалении человека с СУБД: " + e.getCause());
-            return 0;
-        }
-    }
-
-    @Override
-    public int deleteById(int id) {
-        try (Connection connection = connectionDB()) {
-            return connection
-                    .createStatement()
-                    .executeUpdate("DELETE FROM users WHERE user_id = " + id);
-        } catch (SQLException | IndexOutOfBoundsException e) {
-            log.error("Ошибка при удалении человека с СУБД: " + e.getCause());
-            return 0;
-        }
-    }
-
-    @Override
-    public int deleteAll() {
-        try (Connection connection = connectionDB()) {
-            return connection
-                    .createStatement()
-                    .executeUpdate("DELETE FROM users");
-        } catch (SQLException e) {
-            log.error("Ошибка при очистке СУБД: " + e.getCause());
+            log.error("An exception was thrown while working with the database: " + e.getMessage());
             return 0;
         }
     }

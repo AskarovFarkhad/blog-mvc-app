@@ -65,13 +65,14 @@
 <body>
 <div class="container">
     <h1>Все пользователи</h1>
-</div>
+    <br>
     <table>
         <thead>
         <tr>
             <th>Имя пользователя</th>
             <th>Email</th>
-            <th>Действия</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -80,12 +81,17 @@
             <td th:text="${user.getEmail()}">Email</td>
             <td>
                 <a class="button-link"
-                   th:href="@{/public/api/v1/users/{id}/edit(id=${user.getUserId()})}">Изменить</a>
-                    <form class="button-link" method="DELETE"
-                       th:action="@{/public/api/v1/users/{userId}(userId=${user.getUserId()})}">Удалить</form>
+                   th:href="@{/public/api/v1/users/{userId}/edit(userId=${user.getUserId()})}">Изменить</a>
+            </td>
+            <td>
+                <form th:method="DELETE"
+                      th:action="@{/public/api/v1/users/{userId}(userId=${user.getUserId()})}">
+                    <input class="button-link" type="submit" value="Удалить">
+                </form>
             </td>
         </tr>
         </tbody>
-</table>
+    </table>
+</div>
 </body>
 </html>

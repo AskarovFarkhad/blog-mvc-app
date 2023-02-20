@@ -3,7 +3,7 @@ package com.blog.service;
 import com.blog.dto.UserDto;
 import com.blog.mapper.UserMapper;
 import com.blog.model.User;
-import com.blog.repository.UserRepository;
+import com.blog.dao.UserDao;
 import com.blog.util.ConverterSetUsers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository repository;
+    private final UserDao repository;
 
     private final UserMapper mapper;
 
