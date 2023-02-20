@@ -37,21 +37,22 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/edit")
-    public String update(@PathVariable("userId") UUID userId) {
-        // TODO реализовать
-        return "";
+    public String updateUser(@PathVariable("userId") UUID userId, Model model) {
+        UserDto userDto = service.getById(userId);
+        model.addAttribute("user", userDto);
+        return "user/update-user";
     }
 
     @PatchMapping("/{userId}")
-    public String updateUser(@PathVariable("userId") UUID userId) {
-        // TODO реализовать
-        return "";
+    public String updateUser(@PathVariable("userId") UUID userId, @ModelAttribute("user") UserDto dto) {
+        service.update(userId, dto);
+        return "redirect:/public/api/v1/users/all";
     }
 
     @DeleteMapping("/{userId}")
     public String deleteUser(@PathVariable("userId") UUID userId) {
-        // TODO реализовать
-        return "";
+        service.delete(userId);
+        return "redirect:/public/api/v1/users/all";
     }
 
     @GetMapping("/all")

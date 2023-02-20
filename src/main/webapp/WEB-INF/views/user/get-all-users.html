@@ -79,9 +79,10 @@
             <td th:text="${user.getUserName()}">Пользователь</td>
             <td th:text="${user.getEmail()}">Email</td>
             <td>
-                <a class="button-link" th:href="@{/public/api/v1/users/{userId}/edit(userId=${user.getUserId()})}">Изменить</a>
                 <a class="button-link"
-                   th:href="@{/public/api/v1/users/{userId}(userId=${user.getUserId()})}">Удалить</a>
+                   th:href="@{/public/api/v1/users/{id}/edit(id=${user.getUserId()})}">Изменить</a>
+                    <form class="button-link" method="DELETE"
+                       th:action="@{/public/api/v1/users/{userId}(userId=${user.getUserId()})}">Удалить</form>
             </td>
         </tr>
         </tbody>
