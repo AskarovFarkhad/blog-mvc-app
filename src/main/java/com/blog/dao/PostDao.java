@@ -2,8 +2,9 @@ package com.blog.dao;
 
 import com.blog.model.Post;
 import com.blog.repository.CrudRepository;
-import com.blog.util.ConnectDataSource;
-import lombok.extern.slf4j.Slf4j;
+import com.blog.util.ConnectToDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -11,13 +12,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-@Slf4j
 @Repository
 public class PostDao implements CrudRepository<Post> {
 
+    private static final Logger log = LoggerFactory.getLogger(PostDao.class);
+
     @Override
     public ResultSet getAll() {
-        try (Connection connection = ConnectDataSource.getConnection()) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
             return connection
                     .createStatement().executeQuery("SELECT * FROM posts");
         } catch (Exception e) {
@@ -28,7 +30,7 @@ public class PostDao implements CrudRepository<Post> {
 
     @Override
     public ResultSet getById(UUID id) {
-        try (Connection connection = ConnectDataSource.getConnection()) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
             return connection
                     .createStatement()
                     .executeQuery("SELECT * FROM posts WHERE post_id = '" + id + "'");
@@ -40,7 +42,7 @@ public class PostDao implements CrudRepository<Post> {
 
     @Override
     public int save(Post post) {
-        try (Connection connection = ConnectDataSource.getConnection()) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
             return connection
                     .createStatement()
                     .executeUpdate("INSERT INTO posts (post_id, title, content, created_at, user_id)" +
@@ -54,7 +56,7 @@ public class PostDao implements CrudRepository<Post> {
 
     @Override
     public int update(Post post) {
-        try (Connection connection = ConnectDataSource.getConnection()) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
             return connection
                     .createStatement()
                     .executeUpdate("UPDATE posts SET title = '" + post.getTitle() +
@@ -67,7 +69,7 @@ public class PostDao implements CrudRepository<Post> {
 
     @Override
     public int delete(UUID id) {
-        try (Connection connection = ConnectDataSource.getConnection()) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
             return connection
                     .createStatement()
                     .executeUpdate("DELETE FROM posts WHERE post_id = '" + id + "'");

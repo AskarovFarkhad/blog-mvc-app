@@ -1,21 +1,27 @@
 package com.blog.util;
 
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Properties;
 
-@Slf4j
-@NoArgsConstructor
-public class ConnectDataSource {
+public class ConnectToDataSource {
+
+    private static final Logger log = LoggerFactory.getLogger(ConnectToDataSource.class);
+
+    @Value("${spring.datasource.url}")
+    private static String URL;
+
+    @Value("${spring.datasource.username}")
+    private static String USERNAME;
+
+    @Value("${spring.datasource.password}")
+    private static String PASSWORD;
+
 
     public static Connection getConnection() throws SQLException {
         return connectionDB().orElseThrow(SQLException::new);
@@ -32,13 +38,5 @@ public class ConnectDataSource {
             log.error("Error connecting to database: " + e.getMessage());
             return Optional.empty();
         }
-    }
-
-    private Properties initProperties() throws IOException {
-        Properties dbProperties = new Properties();
-        String rootPath =
-                Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath();
-        dbProperties.load(Files.newInputStream(Paths.get(rootPath + "application.properties")));
-        return dbProperties;
     }
 }

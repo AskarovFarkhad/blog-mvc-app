@@ -2,8 +2,9 @@ package com.blog.dao;
 
 import com.blog.model.User;
 import com.blog.repository.CrudRepository;
-import com.blog.util.ConnectDataSource;
-import lombok.extern.slf4j.Slf4j;
+import com.blog.util.ConnectToDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -12,13 +13,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-@Slf4j
 @Repository
 public class UserDao implements CrudRepository<User> {
 
+    private static final Logger log = LoggerFactory.getLogger(UserDao.class);
+
     @Override
     public ResultSet getAll() {
-        try (Connection connection = ConnectDataSource.getConnection()) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
             return connection
                     .createStatement()
                     .executeQuery("SELECT * FROM users");
@@ -30,7 +32,7 @@ public class UserDao implements CrudRepository<User> {
 
     @Override
     public ResultSet getById(UUID id) {
-        try (Connection connection = ConnectDataSource.getConnection()) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
             PreparedStatement query = connection.prepareStatement("SELECT * FROM users WHERE user_id = ?");
             query.setObject(1, id);
             return query.executeQuery();
@@ -42,7 +44,7 @@ public class UserDao implements CrudRepository<User> {
 
     @Override
     public int save(User user) {
-        try (Connection connection = ConnectDataSource.getConnection()) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
             return connection
                     .createStatement()
                     .executeUpdate("INSERT INTO users (user_id, username, email, password, is_deleted, is_admin)" +
@@ -56,7 +58,7 @@ public class UserDao implements CrudRepository<User> {
 
     @Override
     public int update(User user) {
-        try (Connection connection = ConnectDataSource.getConnection()) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
             return connection
                     .createStatement()
                     .executeUpdate("UPDATE users SET username = '" + user.getUserName() +
@@ -70,7 +72,7 @@ public class UserDao implements CrudRepository<User> {
 
     @Override
     public int delete(UUID id) {
-        try (Connection connection = ConnectDataSource.getConnection()) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
             return connection
                     .createStatement()
                     .executeUpdate("DELETE FROM users WHERE user_id = '" + id + "'");
