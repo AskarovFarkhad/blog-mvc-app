@@ -1,7 +1,7 @@
 package com.blog.controller;
 
 import com.blog.dto.PostDto;
-import com.blog.dto.UUID;
+import com.blog.dto.UserDto;
 import com.blog.service.PostService;
 import com.blog.service.UserService;
 import org.slf4j.Logger;
@@ -63,7 +63,7 @@ public class PostController {
     public String getAllPosts(Model model) throws SQLException {
         log.info("Received request to get all post's");
         List<PostDto> posts = postService.getAll();
-        List<UUID> authors = userService.getAllUsers();
+        List<UserDto> authors = userService.getAllUsers();
         model.addAttribute("posts", posts);
         model.addAttribute("authors", authors);
         model.addAttribute("post", new PostDto());

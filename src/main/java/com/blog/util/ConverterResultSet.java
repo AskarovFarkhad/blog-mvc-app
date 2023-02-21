@@ -1,50 +1,52 @@
 package com.blog.util;
 
 import com.blog.dto.PostDto;
-import com.blog.dto.UUID;
+import com.blog.dto.UserDto;
 
+import javax.crypto.ExemptionMechanismException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ConverterResultSet {
 
-    public static List<UUID> convertResultSetToListUserDto(ResultSet resultSet) throws SQLException {
-        List<UUID> users = new ArrayList<>();
-        try {
+    public static List<UserDto> convertResultSetToListUserDto(Optional<ResultSet> optionalResultSet) {
+        List<UserDto> users = new ArrayList<>();
+        try (ResultSet resultSet = optionalResultSet.orElseThrow(ClassNotFoundException::new)) {
             while (resultSet.next()) {
-                users.add(new UUID(
+                users.add(new UserDto(
                         java.util.UUID.fromString(resultSet.getString("user_id")),
                         resultSet.getString("username"),
                         resultSet.getString("email"),
                         resultSet.getString("password")));
             }
-        } finally {
-            resultSet.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return users;
     }
 
-    public static UUID convertSetToUserDto(ResultSet resultSet) throws SQLException {
-        UUID UUID = null;
-        try {
+    public static UserDto convertSetToUserDto(Optional<ResultSet> optionalResultSet) {
+        UserDto userDto = null;
+        try (ResultSet resultSet = optionalResultSet.orElseThrow(ClassNotFoundException::new)) {
             while (resultSet.next()) {
-                UUID = new UUID(
+                userDto = new UserDto(
                         java.util.UUID.fromString(resultSet.getString("user_id")),
                         resultSet.getString("username"),
                         resultSet.getString("email"),
                         resultSet.getString("password"));
             }
-        } finally {
-            resultSet.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return UUID;
+        return userDto;
     }
 
-    public static List<PostDto> convertSetPostToList(ResultSet resultSet) throws SQLException {
+    public static List<PostDto> convertSetPostToList(Optional<ResultSet> optionalResultSet) {
         List<PostDto> posts = new ArrayList<>();
-        try {
+        try (ResultSet resultSet = optionalResultSet.orElseThrow(ClassNotFoundException::new)) {
             while (resultSet.next()) {
                 posts.add(new PostDto(
                         resultSet.getString("title"),
@@ -52,15 +54,15 @@ public class ConverterResultSet {
                         resultSet.getTimestamp("created_at").toLocalDateTime()
                 ));
             }
-        } finally {
-            resultSet.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return posts;
     }
 
-    public static PostDto convertSetToPostDto(ResultSet resultSet) throws SQLException {
+    public static PostDto convertSetToPostDto(Optional<ResultSet> optionalResultSet) {
         PostDto postDto = null;
-        try {
+        try (ResultSet resultSet = optionalResultSet.orElseThrow(ClassNotFoundException::new)) {
             while (resultSet.next()) {
                 postDto = new PostDto(
                         resultSet.getString("title"),
@@ -68,8 +70,8 @@ public class ConverterResultSet {
                         resultSet.getTimestamp("created_at").toLocalDateTime()
                 );
             }
-        } finally {
-            resultSet.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return postDto;
     }

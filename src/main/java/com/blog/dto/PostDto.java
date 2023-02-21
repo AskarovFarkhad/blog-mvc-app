@@ -5,6 +5,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 public class PostDto {
 
@@ -31,11 +32,11 @@ public class PostDto {
         this.createdAt = createdAt;
     }
 
-    public java.util.UUID getPostId() {
+    public UUID getPostId() {
         return postId;
     }
 
-    public void setPostId(java.util.UUID postId) {
+    public void setPostId(UUID postId) {
         this.postId = postId;
     }
 

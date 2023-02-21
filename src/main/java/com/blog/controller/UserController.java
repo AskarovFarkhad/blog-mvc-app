@@ -1,6 +1,6 @@
 package com.blog.controller;
 
-import com.blog.dto.UUID;
+import com.blog.dto.UserDto;
 import com.blog.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +27,12 @@ public class UserController {
 
     @GetMapping("/new")
     public String createUser(Model model) {
-        model.addAttribute("user", new UUID());
+        model.addAttribute("user", new UserDto());
         return "user/create-user";
     }
 
     @PostMapping()
-    public String createUser(@ModelAttribute("user") UUID dto) {
+    public String createUser(@ModelAttribute("user") UserDto dto) {
         service.save(dto);
         return "redirect:/public/api/v1/posts";
     }
@@ -45,7 +45,7 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     public String updateUser(@PathVariable("userId") java.util.UUID userId,
-                             @ModelAttribute("user") UUID dto) throws SQLException {
+                             @ModelAttribute("user") UserDto dto) throws SQLException {
         service.update(userId, dto);
         return "redirect:/public/api/v1/users/all";
     }
@@ -58,7 +58,7 @@ public class UserController {
 
     @GetMapping("/all")
     public String getAllUsers(Model model) throws SQLException {
-        List<UUID> users = service.getAllUsers();
+        List<UserDto> users = service.getAllUsers();
         model.addAttribute("users", users);
         return "user/get-all-users";
     }

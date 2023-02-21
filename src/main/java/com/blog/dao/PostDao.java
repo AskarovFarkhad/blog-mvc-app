@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -18,25 +20,24 @@ public class PostDao implements CrudRepository<Post> {
     private static final Logger log = LoggerFactory.getLogger(PostDao.class);
 
     @Override
-    public ResultSet getAll() {
+    public Optional<ResultSet> getAll() {
         try (Connection connection = ConnectToDataSource.getConnection()) {
-            return connection
-                    .createStatement().executeQuery("SELECT * FROM posts");
+            return Optional.of(connection.createStatement().executeQuery("SELECT * FROM posts"));
         } catch (Exception e) {
             log.error("An exception was thrown while working with the database: " + e.getMessage());
-            return null;
+            return Optional.empty();
         }
     }
 
     @Override
-    public ResultSet getById(UUID id) {
+    public Optional<ResultSet> getById(UUID postId) {
         try (Connection connection = ConnectToDataSource.getConnection()) {
-            return connection
-                    .createStatement()
-                    .executeQuery("SELECT * FROM posts WHERE post_id = '" + id + "'");
+            PreparedStatement queryGetById = connection.prepareStatement("SELECT * FROM posts WHERE post_id = ?");
+            queryGetById.setObject(1, postId);
+            return Optional.of(queryGetById.executeQuery());
         } catch (SQLException | IndexOutOfBoundsException e) {
             log.error("An exception was thrown while working with the database: " + e.getMessage());
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -68,11 +69,11 @@ public class PostDao implements CrudRepository<Post> {
     }
 
     @Override
-    public int delete(UUID id) {
+    public int delete(UUID postId) {
         try (Connection connection = ConnectToDataSource.getConnection()) {
-            return connection
-                    .createStatement()
-                    .executeUpdate("DELETE FROM posts WHERE post_id = '" + id + "'");
+            PreparedStatement queryDeleteById = connection.prepareStatement("DELETE FROM posts WHERE post_id = ?");
+            queryDeleteById.setObject(1, postId);
+            return queryDeleteById.executeUpdate();
         } catch (SQLException e) {
             log.error("An exception was thrown while working with the database: " + e.getMessage());
             return 0;

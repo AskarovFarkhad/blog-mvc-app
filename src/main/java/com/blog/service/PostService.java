@@ -9,8 +9,6 @@ import com.blog.util.ConverterResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,14 +17,11 @@ public class PostService {
 
     private final PostDao postDao;
 
-    private final UserDao userDao;
-
     private final PostMapper mapper;
 
     @Autowired
-    public PostService(PostDao postDao, UserDao userDao, PostMapper mapper) {
+    public PostService(PostDao postDao, PostMapper mapper) {
         this.postDao = postDao;
-        this.userDao = userDao;
         this.mapper = mapper;
     }
 
@@ -35,9 +30,8 @@ public class PostService {
         return postDao.save(post);
     }
 
-    public PostDto getById(UUID postId) throws SQLException {
-        ResultSet resultSet = postDao.getById(postId);
-        return ConverterResultSet.convertSetToPostDto(resultSet);
+    public PostDto getById(UUID postId) {
+        return ConverterResultSet.convertSetToPostDto(postDao.getById(postId));
     }
 
     public void update(UUID postId, PostDto dto) {
@@ -48,7 +42,7 @@ public class PostService {
         postDao.delete(postId);
     }
 
-    public List<PostDto> getAll() throws SQLException {
+    public List<PostDto> getAll() {
         return ConverterResultSet.convertSetPostToList(postDao.getAll());
     }
 }

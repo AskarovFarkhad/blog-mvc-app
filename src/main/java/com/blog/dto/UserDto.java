@@ -3,10 +3,11 @@ package com.blog.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.UUID;
 
-public class UUID {
+public class UserDto {
 
-    private java.util.UUID userId;
+    private UUID userId;
 
     @NotBlank(message = "\"Name\" field must not be empty")
     private String userName;
@@ -19,10 +20,10 @@ public class UUID {
     @Size(min = 8, message = "\"Password\" field should be don't less 8 characters long")
     private String password;
 
-    public UUID() {
+    public UserDto() {
     }
 
-    public UUID(java.util.UUID userId, String userName, String email, String password) {
+    public UserDto(java.util.UUID userId, String userName, String email, String password) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;

@@ -1,14 +1,14 @@
 package com.blog.mapper;
 
-import com.blog.dto.UUID;
+import com.blog.dto.UserDto;
 import com.blog.model.User;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring", uses = {User.class, UUID.class, java.util.UUID.class}, imports = java.util.UUID.class)
+@Mapper(componentModel = "spring", uses = {User.class, UserDto.class, java.util.UUID.class}, imports = java.util.UUID.class)
 public interface UserMapper {
 
     //@Mapping(target = "userId", expression = "java(UUID.randomUUID())")
-    User toUser(UUID dto);
+    User toUser(UserDto dto);
 
-    UUID toUserDto(User user);
+    UserDto toUserDto(User user);
 }
