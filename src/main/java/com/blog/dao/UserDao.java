@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -34,9 +35,9 @@ public class UserDao implements CrudRepository<User> {
     @Override
     public ResultSet getById(UUID id) {
         try (Connection connection = connectDataSource.getConnection()) {
-            return connection
-                    .createStatement()
-                    .executeQuery("SELECT * FROM users WHERE user_id = '" + id + "'");
+            PreparedStatement query = connection.prepareStatement("SELECT * FROM users WHERE user_id = ?");
+            query.setObject(1, id);
+            return query.executeQuery();
         } catch (SQLException | IndexOutOfBoundsException e) {
             log.error("An exception was thrown while working with the database: " + e.getMessage());
             return null;
