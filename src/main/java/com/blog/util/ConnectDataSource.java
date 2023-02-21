@@ -2,7 +2,6 @@ package com.blog.util;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,15 +14,14 @@ import java.util.Optional;
 import java.util.Properties;
 
 @Slf4j
-@Component
 @NoArgsConstructor
 public class ConnectDataSource {
 
-    public Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         return connectionDB().orElseThrow(SQLException::new);
     }
 
-    private Optional<Connection> connectionDB() {
+    private static Optional<Connection> connectionDB() {
         try {
             Class.forName("org.postgresql.Driver");
             return Optional.ofNullable(DriverManager.getConnection(
