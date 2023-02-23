@@ -1,78 +1,101 @@
 package com.blog.util;
 
-import com.blog.dto.PostDto;
+import com.blog.dao.UserDao;
+import com.blog.dto.PostResponseDto;
 import com.blog.dto.UserDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.crypto.ExemptionMechanismException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
+@Component
 public class ConverterResultSet {
 
-    public static List<UserDto> convertResultSetToListUserDto(Optional<ResultSet> optionalResultSet) {
+    private static final Logger log = LoggerFactory.getLogger(ConverterResultSet.class);
+
+    private final UserDao userDao;
+
+    @Autowired
+    public ConverterResultSet(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public List<UserDto> convertResultSetToListUserDto(Optional<ResultSet> optionalResultSet) {
         List<UserDto> users = new ArrayList<>();
         try (ResultSet resultSet = optionalResultSet.orElseThrow(ClassNotFoundException::new)) {
             while (resultSet.next()) {
                 users.add(new UserDto(
-                        java.util.UUID.fromString(resultSet.getString("user_id")),
+                        UUID.fromString(resultSet.getString("user_id")),
                         resultSet.getString("username"),
                         resultSet.getString("email"),
                         resultSet.getString("password")));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            log.error("An error occurred while converting the parameters of the ResultSet object with databases: {}",
+                    e.getMessage());
         }
         return users;
     }
 
-    public static UserDto convertSetToUserDto(Optional<ResultSet> optionalResultSet) {
+    public UserDto convertSetToUserDto(Optional<ResultSet> optionalResultSet) {
         UserDto userDto = null;
         try (ResultSet resultSet = optionalResultSet.orElseThrow(ClassNotFoundException::new)) {
             while (resultSet.next()) {
                 userDto = new UserDto(
-                        java.util.UUID.fromString(resultSet.getString("user_id")),
+                        UUID.fromString(resultSet.getString("user_id")),
                         resultSet.getString("username"),
                         resultSet.getString("email"),
                         resultSet.getString("password"));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            log.error("An error occurred while converting the parameters of the ResultSet object with databases: {}",
+                    e.getMessage());
         }
         return userDto;
     }
 
-    public static List<PostDto> convertSetPostToList(Optional<ResultSet> optionalResultSet) {
-        List<PostDto> posts = new ArrayList<>();
-        try (ResultSet resultSet = optionalResultSet.orElseThrow(ClassNotFoundException::new)) {
+    public List<PostResponseDto> convertSetPostToList(Optional<ResultSet> optResultSetPost) {
+        List<PostResponseDto> posts = new ArrayList<>();
+        try (ResultSet resultSet = optResultSetPost.orElseThrow(ClassNotFoundException::new)) {
             while (resultSet.next()) {
-                posts.add(new PostDto(
+                posts.add(new PostResponseDto(
+                        UUID.fromString(resultSet.getString("post_id")),
                         resultSet.getString("title"),
                         resultSet.getString("content"),
-                        resultSet.getTimestamp("created_at").toLocalDateTime()
+                        resultSet.getTimestamp("created_at").toLocalDateTime(),
+                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id"))))
                 ));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            log.error("An error occurred while converting the parameters of the ResultSet object with databases: {}",
+                    e.getMessage());
         }
         return posts;
     }
 
-    public static PostDto convertSetToPostDto(Optional<ResultSet> optionalResultSet) {
-        PostDto postDto = null;
+    public PostResponseDto convertSetToPostDto(Optional<ResultSet> optionalResultSet) {
+        PostResponseDto postResponseDto = null;
         try (ResultSet resultSet = optionalResultSet.orElseThrow(ClassNotFoundException::new)) {
             while (resultSet.next()) {
-                postDto = new PostDto(
+                postResponseDto = new PostResponseDto(
+                        UUID.fromString(resultSet.getString("post_id")),
                         resultSet.getString("title"),
                         resultSet.getString("content"),
-                        resultSet.getTimestamp("created_at").toLocalDateTime()
+                        resultSet.getTimestamp("created_at").toLocalDateTime(),
+                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id"))))
                 );
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            log.error("An error occurred while converting the parameters of the ResultSet object with databases: {}",
+                    e.getMessage());
         }
-        return postDto;
+        return postResponseDto;
     }
 }

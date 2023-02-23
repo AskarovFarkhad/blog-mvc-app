@@ -3,6 +3,7 @@ package com.blog.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 import java.util.UUID;
 
 public class UserDto {
@@ -23,18 +24,18 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(java.util.UUID userId, String userName, String email, String password) {
+    public UserDto(UUID userId, String userName, String email, String password) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
         this.password = password;
     }
 
-    public java.util.UUID getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(java.util.UUID userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
@@ -60,5 +61,28 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return userId.equals(userDto.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

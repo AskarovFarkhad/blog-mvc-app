@@ -44,11 +44,14 @@ public class PostDao implements CrudRepository<Post> {
     @Override
     public int save(Post post) {
         try (Connection connection = ConnectToDataSource.getConnection()) {
-            return connection
-                    .createStatement()
-                    .executeUpdate("INSERT INTO posts (post_id, title, content, created_at, user_id)" +
-                            " VALUES ('" + post.getPostId() + "', '" + post.getTitle() + "', '" + post.getContent() +
-                            "', '" + post.getCreatedAt() + "', '" + post.getAuthor() + "')");
+            PreparedStatement queryCreateUser = connection.prepareStatement(
+                    "INSERT INTO posts (post_id, title, content, created_at, user_id) VALUES (?, ?, ?, ?, ?)");
+            queryCreateUser.setObject(1, post.getPostId());
+            queryCreateUser.setString(2, post.getTitle());
+            queryCreateUser.setString(3, post.getContent());
+            queryCreateUser.setObject(4, post.getCreatedAt());
+            queryCreateUser.setObject(5, post.getAuthor());
+            return queryCreateUser.executeUpdate();
         } catch (SQLException e) {
             log.error("An exception was thrown while working with the database: " + e.getMessage());
             return 0;
@@ -58,10 +61,12 @@ public class PostDao implements CrudRepository<Post> {
     @Override
     public int update(Post post) {
         try (Connection connection = ConnectToDataSource.getConnection()) {
-            return connection
-                    .createStatement()
-                    .executeUpdate("UPDATE posts SET title = '" + post.getTitle() +
-                            "', content = '" + post.getContent()  + "' WHERE user_id = '" + post.getPostId() + "'");
+            PreparedStatement queryUpdateUser = connection
+                    .prepareStatement("UPDATE posts SET title = ?, content = ? WHERE post_id = ?");
+            queryUpdateUser.setString(1, post.getTitle());
+            queryUpdateUser.setString(2, post.getContent());
+            queryUpdateUser.setObject(3, post.getPostId());
+            return queryUpdateUser.executeUpdate();
         } catch (SQLException e) {
             log.error("An exception was thrown while working with the database: " + e.getMessage());
             return 0;

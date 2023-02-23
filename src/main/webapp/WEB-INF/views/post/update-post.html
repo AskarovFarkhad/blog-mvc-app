@@ -2,7 +2,7 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Главная страница</title>
+    <title>Редактирование поста</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -103,57 +103,16 @@
 </head>
 <body>
 <div class="container">
-    <h1>Главная страница</h1>
-    <div>
-        <a href="/public/api/v1/users/new" class="button-link">Добавить пользователя</a>
-        <a href="/public/api/v1/users/all" class="button-link">Все пользователи</a>
-    </div>
-
-    <form th:method="POST" th:action="@{/public/api/v1/posts}" th:object="${post}">
+    <h1>Редактирование поста</h1>
+    <form th:method="PATCH" th:action="@{/public/api/v1/posts/{postId}(postId=${postId})}" th:object="${post}">
         <label for="title">Название:</label>
-        <input type="text" id="title" name="title" th:field="*{title}">
-        <label for="content">Текст:</label>
-        <textarea id="content" name="content" th:field="*{content}"></textarea>
-        <label for="author">Автор:</label>
-        <select class="form-control" id="author" name="author" th:field="*{author}">
-            <option value="">Выберите автора</option>
-            <option th:each="author : ${authors}" th:value="${author.getUserId()}"
-                    th:text="${author.getUserName()}"></option>
-        </select>
-        <br><br>
-        <button type="submit">Опубликовать</button>
-    </form>
+        <input type="text" id="title" name="title" th:value="${post.getTitle()}">
 
-    <table>
-        <thead>
-        <tr>
-            <th>Название</th>
-            <th>Текст</th>
-            <th>Автор</th>
-            <th>Дата публикации</th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="post : ${posts}">
-            <td th:text="${post.getTitle()}"></td>
-            <td th:text="${post.getContent()}"></td>
-            <td th:text="${post.getAuthor().getUserName()}"></td>
-            <td th:text="${#temporals.format(post.getCreatedAt(), 'dd.MM.yyyy HH:mm')}"></td>
-            <td>
-                <a class="button-link"
-                   th:href="@{/public/api/v1/posts/{postId}/edit(postId=${post.getPostId()})}">Изменить</a>
-            </td>
-            <td>
-                <form th:method="DELETE"
-                      th:action="@{/public/api/v1/posts/{postId}(postId=${post.getPostId()})}">
-                    <input class="button-link" type="submit" value="Удалить">
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+        <label for="content">Текст:</label>
+        <textarea id="content" name="content" th:text="${post.getContent()}"></textarea>
+        <br><br>
+        <button type="submit">Сохранить</button>
+    </form>
 </div>
 </body>
 </html>

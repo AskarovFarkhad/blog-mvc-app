@@ -9,8 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("public/api/v1/users")
@@ -33,31 +33,35 @@ public class UserController {
 
     @PostMapping()
     public String createUser(@ModelAttribute("user") UserDto dto) {
+        log.info("Received request to create a new user {}", dto);
         service.save(dto);
         return "redirect:/public/api/v1/posts";
     }
 
     @GetMapping("/{userId}/edit")
-    public String updateUser(@PathVariable("userId") java.util.UUID userId, Model model) throws SQLException {
+    public String updateUser(@PathVariable("userId") UUID userId, Model model) {
+        log.info("Received request to update a user {}", userId);
         model.addAttribute("user", service.getById(userId));
         return "user/update-user";
     }
 
     @PatchMapping("/{userId}")
-    public String updateUser(@PathVariable("userId") java.util.UUID userId,
-                             @ModelAttribute("user") UserDto dto) throws SQLException {
-        service.update(userId, dto);
+    public String updateUser(@PathVariable("userId") UUID userId, @ModelAttribute("user") UserDto userDto) {
+        log.info("Update request received of user {} with new data {}", userId, userDto);
+        service.update(userId, userDto);
         return "redirect:/public/api/v1/users/all";
     }
 
     @DeleteMapping("/{userId}")
-    public String deleteUser(@PathVariable("userId") java.util.UUID userId) {
+    public String deleteUser(@PathVariable("userId") UUID userId) {
+        log.info("Received request to delete a post {}", userId);
         service.delete(userId);
         return "redirect:/public/api/v1/users/all";
     }
 
     @GetMapping("/all")
-    public String getAllUsers(Model model) throws SQLException {
+    public String getAllUsers(Model model) {
+        log.info("Received request to get all user's");
         List<UserDto> users = service.getAllUsers();
         model.addAttribute("users", users);
         return "user/get-all-users";

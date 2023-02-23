@@ -1,8 +1,8 @@
 package com.blog.service;
 
 import com.blog.dao.PostDao;
-import com.blog.dao.UserDao;
-import com.blog.dto.PostDto;
+import com.blog.dto.PostRequestDto;
+import com.blog.dto.PostResponseDto;
 import com.blog.mapper.PostMapper;
 import com.blog.model.Post;
 import com.blog.util.ConverterResultSet;
@@ -19,30 +19,36 @@ public class PostService {
 
     private final PostMapper mapper;
 
+    private final ConverterResultSet converterResultSet;
+
     @Autowired
-    public PostService(PostDao postDao, PostMapper mapper) {
+    public PostService(PostDao postDao, PostMapper mapper, ConverterResultSet converterResultSet) {
         this.postDao = postDao;
         this.mapper = mapper;
+        this.converterResultSet = converterResultSet;
     }
 
-    public int save(PostDto dto) {
-        Post post = mapper.toPost(dto);
+    public int save(PostRequestDto postRequestDto) {
+        Post post = mapper.toPost(postRequestDto);
         return postDao.save(post);
     }
 
-    public PostDto getById(UUID postId) {
-        return ConverterResultSet.convertSetToPostDto(postDao.getById(postId));
+    public PostResponseDto getById(UUID postId) {
+        return converterResultSet.convertSetToPostDto(postDao.getById(postId));
     }
 
-    public void update(UUID postId, PostDto dto) {
-        // TODO
+    public void update(UUID postId, PostResponseDto dto) {
+        PostResponseDto postResponseDto = getById(postId);
+        postResponseDto.setTitle(dto.getTitle());
+        postResponseDto.setContent(dto.getContent());
+        postDao.update(mapper.toPost(postResponseDto));
     }
 
     public void delete(UUID postId) {
         postDao.delete(postId);
     }
 
-    public List<PostDto> getAll() {
-        return ConverterResultSet.convertSetPostToList(postDao.getAll());
+    public List<PostResponseDto> getAll() {
+        return converterResultSet.convertSetPostToList(postDao.getAll());
     }
 }

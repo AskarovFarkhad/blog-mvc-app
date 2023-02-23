@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public class PostDto {
+public class PostResponseDto {
 
-    private java.util.UUID postId;
+    private UUID postId;
 
     @NotBlank(message = "\"Title\" field must not be empty")
     private String title;
@@ -21,15 +21,17 @@ public class PostDto {
     private LocalDateTime createdAt;
 
     @NotEmpty(message = "\"Author\" field must not be empty")
-    private UUID author;
+    private UserDto author;
 
-    public PostDto() {
+    public PostResponseDto() {
     }
 
-    public PostDto(String title, String content, LocalDateTime createdAt) {
+    public PostResponseDto(UUID postId, String title, String content, LocalDateTime createdAt, UserDto author) {
+        this.postId = postId;
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
+        this.author = author;
     }
 
     public UUID getPostId() {
@@ -64,11 +66,11 @@ public class PostDto {
         this.createdAt = createdAt;
     }
 
-    public UUID getAuthor() {
+    public UserDto getAuthor() {
         return author;
     }
 
-    public void setAuthor(UUID author) {
+    public void setAuthor(UserDto author) {
         this.author = author;
     }
 
@@ -76,8 +78,8 @@ public class PostDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PostDto postDto = (PostDto) o;
-        return postId.equals(postDto.postId);
+        PostResponseDto postResponseDto = (PostResponseDto) o;
+        return postId.equals(postResponseDto.postId);
     }
 
     @Override
