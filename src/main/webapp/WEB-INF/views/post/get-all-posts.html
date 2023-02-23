@@ -10,7 +10,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 20px auto;
             display: flex;
             flex-direction: column;
@@ -59,19 +59,25 @@
         }
 
         table {
+            margin: 20px auto;
             border-collapse: collapse;
             border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: #fff;
+            max-width: 800px;
             width: 100%;
-            margin-bottom: 20px;
         }
 
         th, td {
-            text-align: left;
-            padding: 8px;
-            word-wrap: break-word;
+            padding: 10px;
             border: 1px solid #ccc;
+        }
+
+        td {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         th {
@@ -136,21 +142,26 @@
             <th>Текст</th>
             <th>Автор</th>
             <th>Дата публикации</th>
-            <th>Тэги</th>
-            <th>Действия</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="post : ${posts}">
-            <td th:text="${post.getTitle()}"></td>
+            <td>
+                <a th:href="@{/public/api/v1/posts/{postId}(postId=${post.getPostId()})}"
+                   th:text="${post.getTitle()}">
+                </a>
+            </td>
             <td th:text="${post.getContent()}"></td>
             <td th:text="${post.getAuthor().getUserName()}"></td>
             <td th:text="${#temporals.format(post.getCreatedAt(), 'dd.MM.yyyy HH:mm')}"></td>
-            <td></td>
             <td>
                 <a class="button-link"
                    th:href="@{/public/api/v1/posts/{postId}/edit(postId=${post.getPostId()})}">Изменить</a>
                 <br>
+            </td>
+            <td>
                 <form th:method="DELETE"
                       th:action="@{/public/api/v1/posts/{postId}(postId=${post.getPostId()})}">
                     <input class="button-link" type="submit" value="Удалить">

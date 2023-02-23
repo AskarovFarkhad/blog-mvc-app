@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница поста</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+
+        .post-details span {
+            margin-right: 10px;
+        }
+
+        .tags span {
+            margin-right: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .comments h3 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+
+        .comment {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f2f2f2;
+        }
+
+        .comment-details span {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 style="font-weight:bold; margin-bottom: 20px;" th:text="${post.getTitle()}">Название</h2>
+    <p style="font-style: italic; margin-bottom: 20px;" th:text="${post.getContent()}">Текст</p>
+    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <p style="font-size: 12px; margin-right: 10px;" th:text="'Автор: ' + ${post.getAuthor().getUserName()}">
+            Автор</p>
+        <p style="font-size: 12px;"
+           th:text="'Дата создания: ' + ${#temporals.format(post.getCreatedAt(), 'dd.MM.yyyy HH:mm')}">Время
+            создания</p>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <p style="font-weight:bold;">Тэги:</p>
+        <ul>
+           <!-- <li th:each="tag : ${post.tags}" th:text="${tag.name}"></li>-->
+        </ul>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <h3>Комментарии:</h3>
+        <ul>
+            <li th:each="comment : ${comments}" style="margin-bottom: 10px;">
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <p style="font-size: 12px; margin-right: 10px;"
+                       th:text="'Автор комментария: ' + ${comment.getUserId().getUserId()}"></p>
+                    <p style="font-size: 12px;"
+                       th:text="'Дата комментария: ' + ${#temporals.format(comment.getCreatedAt(), 'dd.MM.yyyy HH:mm')}"></p>
+                </div>
+                <p th:text="${comment.getContent()}"></p>
+            </li>
+        </ul>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <h3>Добавить комментарий:</h3>
+        <form th:method="POST" th:action="@{/public/api/v1/comments}" th:object="${comment}">
+            <label for="content">Текст:</label>
+            <textarea id="content" name="content" th:field="*{content}"></textarea>
+            <div style="color: red" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Validation error</div>
+
+            <label for="author">Автор:</label>
+            <select class="form-control" id="author" name="author" th:field="*{author}">
+                <option value="">Выберите автора</option>
+                <option th:each="author : ${authors}" th:value="${author.getUserId()}"
+                        th:text="${author.getUserName()}"></option>
+            </select>
+            <div style="color: red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Validation error</div>
+            <br><br>
+            <button type="submit">Опубликовать</button>
+        </form>
+    </div>
+</div>

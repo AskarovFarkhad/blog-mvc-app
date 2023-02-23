@@ -1,7 +1,6 @@
 package com.blog.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
@@ -21,7 +20,6 @@ public class PostResponseDto {
 
     private LocalDateTime createdAt;
 
-    @NotEmpty(message = "\"Author\" field must not be empty")
     private UserDto author;
 
     public PostResponseDto() {

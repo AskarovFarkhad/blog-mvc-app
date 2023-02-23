@@ -1,8 +1,9 @@
 package com.blog.controller;
 
+import com.blog.dto.CommentRequestDto;
 import com.blog.dto.PostRequestDto;
 import com.blog.dto.PostResponseDto;
-import com.blog.dto.UserDto;
+import com.blog.service.CommentService;
 import com.blog.service.PostService;
 import com.blog.service.UserService;
 import jakarta.validation.Valid;
@@ -14,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -27,17 +27,20 @@ public class PostController {
 
     private final UserService userService;
 
+    private final CommentService commentService;
+
     @Autowired
-    public PostController(PostService postService, UserService userService) {
+    public PostController(PostService postService, UserService userService, CommentService commentService) {
         this.postService = postService;
         this.userService = userService;
+        this.commentService = commentService;
     }
 
     @PostMapping()
     public String createPost(@ModelAttribute("post") @Valid PostRequestDto postRequestDto, BindingResult bindingResult) {
         log.info("Received request to create a new post {}", postRequestDto);
         if (bindingResult.hasErrors()) {
-            log.error("Data not validated {}",  bindingResult.getAllErrors());
+            log.error("Data not validated {}", bindingResult.getAllErrors());
             return "redirect:/public/api/v1/posts";
         }
         postService.save(postRequestDto);
@@ -58,7 +61,7 @@ public class PostController {
                              BindingResult bindingResult) {
         log.info("Update request received of post {} with new data {}", postId, postResponseDto);
         if (bindingResult.hasErrors()) {
-            log.error("Data not validated {}",  bindingResult.getAllErrors());
+            log.error("Data not validated {}", bindingResult.getAllErrors());
             return "post/update-post";
         }
         postService.update(postId, postResponseDto);
@@ -75,11 +78,19 @@ public class PostController {
     @GetMapping()
     public String getAllPosts(Model model) {
         log.info("Received request to get all post's");
-        List<PostResponseDto> posts = postService.getAll();
-        List<UserDto> authors = userService.getAllUsers();
-        model.addAttribute("posts", posts);
-        model.addAttribute("authors", authors);
+        model.addAttribute("posts", postService.getAll());
+        model.addAttribute("authors", userService.getAllUsers());
         model.addAttribute("post", new PostRequestDto());
         return "post/get-all-posts";
+    }
+
+    @GetMapping("/{postId}")
+    public String getPost(@PathVariable("postId") UUID postId, Model model) {
+        log.info("Received request to get post and comment of this post");
+        model.addAttribute("post", postService.getById(postId));
+        model.addAttribute("comments", commentService.getById(postId));
+        model.addAttribute("comment", new CommentRequestDto());
+        model.addAttribute("authors", userService.getAllUsers());
+        return "post/get-post";
     }
 }

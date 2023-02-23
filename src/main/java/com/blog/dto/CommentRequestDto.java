@@ -9,6 +9,8 @@ public class CommentRequestDto {
     @NotBlank(message = "\"Content\" field must not be empty")
     private String content;
 
+    private PostResponseDto author;
+
     public CommentRequestDto() {
     }
 

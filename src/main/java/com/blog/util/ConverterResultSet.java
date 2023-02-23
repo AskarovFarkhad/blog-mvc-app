@@ -1,6 +1,8 @@
 package com.blog.util;
 
+import com.blog.dao.PostDao;
 import com.blog.dao.UserDao;
+import com.blog.dto.CommentResponseDto;
 import com.blog.dto.PostResponseDto;
 import com.blog.dto.UserDto;
 import org.slf4j.Logger;
@@ -22,9 +24,12 @@ public class ConverterResultSet {
 
     private final UserDao userDao;
 
+    private final PostDao postDao;
+
     @Autowired
-    public ConverterResultSet(UserDao userDao) {
+    public ConverterResultSet(UserDao userDao, PostDao postDao) {
         this.userDao = userDao;
+        this.postDao = postDao;
     }
 
     public List<UserDto> convertResultSetToListUserDto(Optional<ResultSet> optionalResultSet) {
@@ -97,5 +102,43 @@ public class ConverterResultSet {
                     e.getMessage());
         }
         return postResponseDto;
+    }
+
+    public List<CommentResponseDto> convertSetCommentToList(Optional<ResultSet> optResultSetPost) {
+        List<CommentResponseDto> comments = new ArrayList<>();
+        try (ResultSet resultSet = optResultSetPost.orElseThrow(ClassNotFoundException::new)) {
+            while (resultSet.next()) {
+                comments.add(new CommentResponseDto(
+                        UUID.fromString(resultSet.getString("comment_id")),
+                        resultSet.getString("content"),
+                        resultSet.getTimestamp("created_at").toLocalDateTime(),
+                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id")))),
+                        convertSetToPostDto(userDao.getById(UUID.fromString(resultSet.getString("post_id"))))
+                ));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            log.error("An error occurred while converting the parameters of the ResultSet object with databases: {}",
+                    e.getMessage());
+        }
+        return comments;
+    }
+
+    public CommentResponseDto convertSetToCommentDto(Optional<ResultSet> optionalResultSet) {
+        CommentResponseDto commentResponseDto = null;
+        try (ResultSet resultSet = optionalResultSet.orElseThrow(ClassNotFoundException::new)) {
+            while (resultSet.next()) {
+                commentResponseDto = new CommentResponseDto(
+                        UUID.fromString(resultSet.getString("comment_id")),
+                        resultSet.getString("content"),
+                        resultSet.getTimestamp("created_at").toLocalDateTime(),
+                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id")))),
+                        convertSetToPostDto(userDao.getById(UUID.fromString(resultSet.getString("post_id"))))
+                );
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            log.error("An error occurred while converting the parameters of the ResultSet object with databases: {}",
+                    e.getMessage());
+        }
+        return commentResponseDto;
     }
 }

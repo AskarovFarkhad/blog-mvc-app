@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -73,8 +72,7 @@ public class UserController {
     @GetMapping("/all")
     public String getAllUsers(Model model) {
         log.info("Received request to get all user's");
-        List<UserDto> users = service.getAllUsers();
-        model.addAttribute("users", users);
+        model.addAttribute("users", service.getAllUsers());
         return "user/get-all-users";
     }
 }
