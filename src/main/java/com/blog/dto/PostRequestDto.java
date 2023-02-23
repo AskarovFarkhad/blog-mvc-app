@@ -1,8 +1,8 @@
 package com.blog.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.UUID;
 
 public class PostRequestDto {
@@ -14,7 +14,6 @@ public class PostRequestDto {
     @Size(min = 10, message = "\"Content\" field should be don't less 10 characters long")
     private String content;
 
-    @NotEmpty(message = "\"Author\" field must not be empty")
     private UUID author;
 
     public PostRequestDto() {

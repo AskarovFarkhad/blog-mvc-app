@@ -107,9 +107,11 @@
     <form th:method="PATCH" th:action="@{/public/api/v1/posts/{postId}(postId=${postId})}" th:object="${post}">
         <label for="title">Название:</label>
         <input type="text" id="title" name="title" th:value="${post.getTitle()}">
+        <div style="color: red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Validation error</div>
 
         <label for="content">Текст:</label>
         <textarea id="content" name="content" th:text="${post.getContent()}"></textarea>
+        <div style="color: red" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Validation error</div>
         <br><br>
         <button type="submit">Сохранить</button>
     </form>

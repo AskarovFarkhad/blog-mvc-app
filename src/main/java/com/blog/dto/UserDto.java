@@ -1,8 +1,10 @@
 package com.blog.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -10,7 +12,8 @@ public class UserDto {
 
     private UUID userId;
 
-    @NotBlank(message = "\"Name\" field must not be empty")
+    @NotEmpty(message = "\"Name\" field must not be empty")
+    @Size(min = 2, message = "\"Name\" field should be don't less 2 characters long")
     private String userName;
 
     @Email(message = "\"Email\" field should be valid")

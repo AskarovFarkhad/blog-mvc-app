@@ -5,11 +5,13 @@ import com.blog.dto.PostResponseDto;
 import com.blog.dto.UserDto;
 import com.blog.service.PostService;
 import com.blog.service.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,8 +34,12 @@ public class PostController {
     }
 
     @PostMapping()
-    public String createPost(@ModelAttribute("post") PostRequestDto postRequestDto) {
+    public String createPost(@ModelAttribute("post") @Valid PostRequestDto postRequestDto, BindingResult bindingResult) {
         log.info("Received request to create a new post {}", postRequestDto);
+        if (bindingResult.hasErrors()) {
+            log.error("Data not validated {}",  bindingResult.getAllErrors());
+            return "redirect:/public/api/v1/posts";
+        }
         postService.save(postRequestDto);
         return "redirect:/public/api/v1/posts";
     }
@@ -48,8 +54,13 @@ public class PostController {
 
     @PatchMapping("/{postId}")
     public String updatePost(@PathVariable("postId") UUID postId,
-                             @ModelAttribute("post") PostResponseDto postResponseDto) {
+                             @ModelAttribute("post") @Valid PostResponseDto postResponseDto,
+                             BindingResult bindingResult) {
         log.info("Update request received of post {} with new data {}", postId, postResponseDto);
+        if (bindingResult.hasErrors()) {
+            log.error("Data not validated {}",  bindingResult.getAllErrors());
+            return "post/update-post";
+        }
         postService.update(postId, postResponseDto);
         return "redirect:/public/api/v1/posts";
     }

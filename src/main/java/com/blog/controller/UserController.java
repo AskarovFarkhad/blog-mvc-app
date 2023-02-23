@@ -2,11 +2,13 @@ package com.blog.controller;
 
 import com.blog.dto.UserDto;
 import com.blog.service.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,9 +34,13 @@ public class UserController {
     }
 
     @PostMapping()
-    public String createUser(@ModelAttribute("user") UserDto dto) {
-        log.info("Received request to create a new user {}", dto);
-        service.save(dto);
+    public String createUser(@ModelAttribute("user") @Valid UserDto userDto, BindingResult bindingResult) {
+        log.info("Received request to create a new user {}", userDto);
+        if (bindingResult.hasErrors()) {
+            log.error("Data not validated {}",  bindingResult.getAllErrors());
+            return "user/create-user";
+        }
+        service.save(userDto);
         return "redirect:/public/api/v1/posts";
     }
 
@@ -46,8 +52,13 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public String updateUser(@PathVariable("userId") UUID userId, @ModelAttribute("user") UserDto userDto) {
+    public String updateUser(@PathVariable("userId") UUID userId,
+                             @ModelAttribute("user") @Valid UserDto userDto, BindingResult bindingResult) {
         log.info("Update request received of user {} with new data {}", userId, userDto);
+        if (bindingResult.hasErrors()) {
+            log.error("Data not validated {}", bindingResult.getAllErrors());
+            return "user/update-user";
+        }
         service.update(userId, userDto);
         return "redirect:/public/api/v1/users/all";
     }
