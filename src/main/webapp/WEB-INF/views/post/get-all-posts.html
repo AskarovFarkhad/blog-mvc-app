@@ -131,8 +131,8 @@
             <th>Текст</th>
             <th>Автор</th>
             <th>Дата публикации</th>
-            <th></th>
-            <th></th>
+            <th>Тэги</th>
+            <th>Действия</th>
         </tr>
         </thead>
         <tbody>
@@ -141,11 +141,11 @@
             <td th:text="${post.getContent()}"></td>
             <td th:text="${post.getAuthor().getUserName()}"></td>
             <td th:text="${#temporals.format(post.getCreatedAt(), 'dd.MM.yyyy HH:mm')}"></td>
+            <td></td>
             <td>
                 <a class="button-link"
                    th:href="@{/public/api/v1/posts/{postId}/edit(postId=${post.getPostId()})}">Изменить</a>
-            </td>
-            <td>
+                <br>
                 <form th:method="DELETE"
                       th:action="@{/public/api/v1/posts/{postId}(postId=${post.getPostId()})}">
                     <input class="button-link" type="submit" value="Удалить">
