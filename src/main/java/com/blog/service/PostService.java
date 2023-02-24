@@ -22,7 +22,9 @@ public class PostService {
     private final ConverterResultSet converterResultSet;
 
     @Autowired
-    public PostService(PostDao postDao, PostMapper mapper, ConverterResultSet converterResultSet) {
+    public PostService(PostDao postDao,
+                       PostMapper mapper,
+                       ConverterResultSet converterResultSet) {
         this.postDao = postDao;
         this.mapper = mapper;
         this.converterResultSet = converterResultSet;

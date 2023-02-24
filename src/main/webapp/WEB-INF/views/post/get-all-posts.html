@@ -131,13 +131,7 @@
                     th:text="${author.getUserName()}"></option>
         </select>
         <div style="color: red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Validation error</div>
-
         <br>
-        <label for="tags">Теги:</label>
-        <input type="text" id="tags" name="tags" th:field="*{tags}"/>
-        <div style="color: red" th:if="${#fields.hasErrors('tags')}" th:errors="*{tags}">Validation error</div>
-        <br><br>
-
         <button type="submit">Опубликовать</button>
     </form>
 

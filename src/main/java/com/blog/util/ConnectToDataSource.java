@@ -2,7 +2,6 @@ package com.blog.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,14 +12,11 @@ public class ConnectToDataSource {
 
     private static final Logger log = LoggerFactory.getLogger(ConnectToDataSource.class);
 
-    @Value("${spring.datasource.url}")
-    private static String URL;
+    private static final String URL = "jdbc:postgresql://localhost:5432/blog_db";
 
-    @Value("${spring.datasource.username}")
-    private static String USERNAME;
+    private static final String USERNAME = "postgres";
 
-    @Value("${spring.datasource.password}")
-    private static String PASSWORD;
+    private static final String PASSWORD = "admin";
 
 
     public static Connection getConnection() throws SQLException {
@@ -30,10 +26,7 @@ public class ConnectToDataSource {
     private static Optional<Connection> connectionDB() {
         try {
             Class.forName("org.postgresql.Driver");
-            return Optional.ofNullable(DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/blog_db",
-                    "postgres",
-                    "admin"));
+            return Optional.ofNullable(DriverManager.getConnection(URL, USERNAME, PASSWORD));
         } catch (Exception e) {
             log.error("Error connecting to database: " + e.getMessage());
             return Optional.empty();

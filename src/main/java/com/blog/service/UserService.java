@@ -1,7 +1,7 @@
 package com.blog.service;
 
 import com.blog.dao.UserDao;
-import com.blog.dto.UserDto;
+import com.blog.dto.user.UserDto;
 import com.blog.mapper.UserMapper;
 import com.blog.model.User;
 import com.blog.util.ConverterResultSet;
@@ -29,7 +29,6 @@ public class UserService {
 
     public int save(UserDto dto) {
         User user = mapper.toUser(dto);
-        user.setUserId(java.util.UUID.randomUUID());
         return userDao.save(user);
     }
 

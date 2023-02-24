@@ -3,16 +3,16 @@ package com.blog.model;
 import java.util.Objects;
 import java.util.UUID;
 
-public class TagItem {
+public class Tag {
 
     private UUID tagId;
 
     private String name;
 
-    public TagItem() {
+    public Tag() {
     }
 
-    public TagItem(String name) {
+    public Tag(String name) {
         this.name = name;
     }
 
@@ -36,8 +36,8 @@ public class TagItem {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TagItem tagItem = (TagItem) o;
-        return tagId.equals(tagItem.tagId);
+        Tag tag = (Tag) o;
+        return tagId.equals(tag.tagId);
     }
 
     @Override

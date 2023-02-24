@@ -1,6 +1,6 @@
 package com.blog.dto.comment;
 
-import com.blog.dto.UserDto;
+import com.blog.dto.user.UserDto;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;

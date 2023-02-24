@@ -33,10 +33,6 @@ public class CommentService {
         return commentDao.save(comment);
     }
 
-    public CommentResponseDto getByPostId(UUID postId) {
-        return converterResultSet.convertSetToCommentDto(commentDao.getById(postId));
-    }
-
     public CommentResponseDto getByCommentId(UUID commentId) {
         return converterResultSet.convertSetToCommentDto(commentDao.getByCommentId(commentId));
     }

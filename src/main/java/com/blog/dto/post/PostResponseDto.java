@@ -1,8 +1,8 @@
 package com.blog.dto.post;
 
-import com.blog.dto.UserDto;
+import com.blog.dto.tag.TagResponseDto;
+import com.blog.dto.user.UserDto;
 import com.blog.dto.comment.CommentResponseDto;
-import com.blog.dto.tag.TagItemResponseDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -28,13 +28,13 @@ public class PostResponseDto {
 
     private List<CommentResponseDto> comments;
 
-    private List<TagItemResponseDto> tags;
+    private List<TagResponseDto> tags;
 
     public PostResponseDto() {
     }
 
     public PostResponseDto(UUID postId, String title, String content, LocalDateTime createdAt, UserDto author,
-                           List<CommentResponseDto> comments, List<TagItemResponseDto> tags) {
+                           List<CommentResponseDto> comments, List<TagResponseDto> tags) {
         this.postId = postId;
         this.title = title;
         this.content = content;
@@ -92,11 +92,11 @@ public class PostResponseDto {
         this.comments = comments;
     }
 
-    public List<TagItemResponseDto> getTags() {
+    public List<TagResponseDto> getTags() {
         return tags;
     }
 
-    public void setTags(List<TagItemResponseDto> tags) {
+    public void setTags(List<TagResponseDto> tags) {
         this.tags = tags;
     }
 

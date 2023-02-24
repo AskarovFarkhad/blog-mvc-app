@@ -42,18 +42,6 @@ public class CommentDao implements CrudRepository<Comment> {
         }
     }
 
-    public Optional<ResultSet> getByCommentId(UUID commentId) {
-        try (Connection connection = ConnectToDataSource.getConnection()) {
-            PreparedStatement queryGetById =
-                    connection.prepareStatement("SELECT * FROM comments WHERE comment_id = ?");
-            queryGetById.setObject(1, commentId);
-            return Optional.of(queryGetById.executeQuery());
-        } catch (SQLException | IndexOutOfBoundsException e) {
-            log.error("An exception was thrown while working with the database: " + e.getMessage());
-            return Optional.empty();
-        }
-    }
-
     @Override
     public int save(Comment comment) {
         try (Connection connection = ConnectToDataSource.getConnection()) {
@@ -95,6 +83,18 @@ public class CommentDao implements CrudRepository<Comment> {
         } catch (SQLException e) {
             log.error("An exception was thrown while working with the database: " + e.getMessage());
             return 0;
+        }
+    }
+
+    public Optional<ResultSet> getByCommentId(UUID commentId) {
+        try (Connection connection = ConnectToDataSource.getConnection()) {
+            PreparedStatement queryGetById =
+                    connection.prepareStatement("SELECT * FROM comments WHERE comment_id = ?");
+            queryGetById.setObject(1, commentId);
+            return Optional.of(queryGetById.executeQuery());
+        } catch (SQLException | IndexOutOfBoundsException e) {
+            log.error("An exception was thrown while working with the database: " + e.getMessage());
+            return Optional.empty();
         }
     }
 }

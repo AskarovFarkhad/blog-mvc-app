@@ -1,10 +1,8 @@
 package com.blog.dto.post;
 
-import com.blog.dto.tag.TagItemRequestDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.util.List;
 import java.util.UUID;
 
 public class PostRequestDto {
@@ -18,15 +16,7 @@ public class PostRequestDto {
 
     private UUID author;
 
-    private List<TagItemRequestDto> tags;
-
     public PostRequestDto() {
-    }
-
-    public PostRequestDto(String title, String content, UUID author) {
-        this.title = title;
-        this.content = content;
-        this.author = author;
     }
 
     public String getTitle() {
@@ -51,14 +41,6 @@ public class PostRequestDto {
 
     public void setAuthor(UUID author) {
         this.author = author;
-    }
-
-    public List<TagItemRequestDto> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<TagItemRequestDto> tags) {
-        this.tags = tags;
     }
 
     @Override

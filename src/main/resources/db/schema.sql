@@ -25,8 +25,8 @@ create TABLE comments
     comment_id UUID PRIMARY KEY,
     content    TEXT,
     created_at TIMESTAMP NOT NULL,
-    user_id    UUID       NOT NULL REFERENCES users (user_id),
-    post_id    UUID       NOT NULL REFERENCES posts (post_id)
+    user_id    UUID       NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
+    post_id    UUID       NOT NULL REFERENCES posts (post_id) ON DELETE CASCADE
 );
 
 -- Создаем таблицу "tags" для хранения информации о тегах
@@ -39,7 +39,7 @@ create TABLE tags
 -- Создаем таблицу "post_tags" для связи между постами и тегами
 create TABLE post_tags
 (
-    post_id UUID NOT NULL REFERENCES posts (post_id),
-    tag_id  UUID NOT NULL REFERENCES tags (tag_id),
+    post_id UUID NOT NULL REFERENCES posts (post_id) ON DELETE CASCADE,
+    tag_id  UUID NOT NULL REFERENCES tags (tag_id) ON DELETE CASCADE,
     PRIMARY KEY (post_id, tag_id)
 );

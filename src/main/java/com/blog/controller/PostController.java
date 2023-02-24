@@ -3,6 +3,7 @@ package com.blog.controller;
 import com.blog.dto.comment.CommentRequestDto;
 import com.blog.dto.post.PostRequestDto;
 import com.blog.dto.post.PostResponseDto;
+import com.blog.dto.tag.TagRequestDto;
 import com.blog.service.PostService;
 import com.blog.service.UserService;
 import jakarta.validation.Valid;
@@ -86,6 +87,7 @@ public class PostController {
         model.addAttribute("post", postService.getById(postId));
         model.addAttribute("authors", userService.getAllUsers());
         model.addAttribute("comment", new CommentRequestDto());
+        model.addAttribute("tag", new TagRequestDto());
         return "post/get-post";
     }
 }

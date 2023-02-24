@@ -1,21 +1,25 @@
 package com.blog.dto.tag;
 
 
+import com.blog.dto.post.PostResponseDto;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.List;
 import java.util.UUID;
 
-public class TagItemResponseDto {
+public class TagResponseDto {
 
     private UUID tagId;
 
     @NotBlank(message = "\"Tag\" field must not be empty")
     private String name;
 
-    public TagItemResponseDto() {
+    private List<PostResponseDto> posts;
+
+    public TagResponseDto() {
     }
 
-    public TagItemResponseDto(UUID tagId, String name) {
+    public TagResponseDto(UUID tagId, String name) {
         this.tagId = tagId;
         this.name = name;
     }
@@ -36,11 +40,20 @@ public class TagItemResponseDto {
         this.name = name;
     }
 
+    public List<PostResponseDto> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostResponseDto> posts) {
+        this.posts = posts;
+    }
+
     @Override
     public String toString() {
         return "TagItemResponseDto{" +
                 "tagId=" + tagId +
                 ", name='" + name + '\'' +
+                ", posts=" + posts +
                 '}';
     }
 }

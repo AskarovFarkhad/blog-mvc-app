@@ -1,6 +1,6 @@
 package com.blog.controller;
 
-import com.blog.dto.UserDto;
+import com.blog.dto.user.UserDto;
 import com.blog.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

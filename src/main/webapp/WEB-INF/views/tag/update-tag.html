@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование тега</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            resize: none;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+
+        table {
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+            word-wrap: break-word;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Редактирование тега</h1>
+    <form th:method="PATCH" th:action="@{/public/api/v1/tags/{tagId}(tagId=${tagId})}" th:object="${tag}">
+        <label for="name">Текст:</label>
+        <input type="text" id="name" name="name" th:value="${tag.getName()}">
+        <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Validation error</div>
+        <br><br>
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
+</body>
+</html>
