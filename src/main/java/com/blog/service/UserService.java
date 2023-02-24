@@ -29,6 +29,7 @@ public class UserService {
 
     public int save(UserDto dto) {
         User user = mapper.toUser(dto);
+        user.setUserId(UUID.randomUUID());
         return userDao.save(user);
     }
 

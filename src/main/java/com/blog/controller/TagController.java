@@ -34,7 +34,7 @@ public class TagController {
         log.info("Received request to create a new tag {}", tagRequestDto);
         if (bindingResult.hasErrors()) {
             log.error("Data not validated {}", bindingResult.getAllErrors());
-            return "redirect:/public/api/v1/tags/{postId}";
+            return "redirect:/public/api/v1/posts/{postId}";
         }
         tagService.save(tagRequestDto, postId);
         return "redirect:/public/api/v1/posts/{postId}";
