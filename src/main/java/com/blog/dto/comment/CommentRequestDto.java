@@ -1,21 +1,22 @@
-package com.blog.dto;
+package com.blog.dto.comment;
 
 import jakarta.validation.constraints.NotBlank;
 
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class CommentRequestDto {
 
     @NotBlank(message = "\"Content\" field must not be empty")
     private String content;
 
-    private PostResponseDto author;
+    private UUID author;
 
     public CommentRequestDto() {
     }
 
-    public CommentRequestDto(String content, LocalDateTime createdAt) {
+    public CommentRequestDto(String content, UUID author) {
         this.content = content;
+        this.author = author;
     }
 
     public String getContent() {
@@ -26,10 +27,19 @@ public class CommentRequestDto {
         this.content = content;
     }
 
+    public UUID getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(UUID author) {
+        this.author = author;
+    }
+
     @Override
     public String toString() {
         return "CommentRequestDto{" +
                 "content='" + content + '\'' +
+                ", author=" + author +
                 '}';
     }
 }

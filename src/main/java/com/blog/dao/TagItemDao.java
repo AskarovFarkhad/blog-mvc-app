@@ -29,11 +29,12 @@ public class TagItemDao implements CrudRepository<TagItem> {
         }
     }
 
-    @Override
-    public Optional<ResultSet> getById(UUID tagId) {
+    @Override // ок
+    public Optional<ResultSet> getById(UUID postId) {
         try (Connection connection = ConnectToDataSource.getConnection()) {
-            PreparedStatement queryGetById = connection.prepareStatement("SELECT * FROM tags WHERE tag_id = ?");
-            queryGetById.setObject(1, tagId);
+            PreparedStatement queryGetById = connection.prepareStatement(
+                    "SELECT tag_id, name FROM post_tags INNER JOIN tags USING(tag_id) WHERE post_id = ?");
+            queryGetById.setObject(1, postId);
             return Optional.of(queryGetById.executeQuery());
         } catch (SQLException | IndexOutOfBoundsException e) {
             log.error("An exception was thrown while working with the database: " + e.getMessage());

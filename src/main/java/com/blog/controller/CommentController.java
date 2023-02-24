@@ -1,7 +1,7 @@
 package com.blog.controller;
 
-import com.blog.dto.CommentRequestDto;
-import com.blog.dto.CommentResponseDto;
+import com.blog.dto.comment.CommentRequestDto;
+import com.blog.dto.comment.CommentResponseDto;
 import com.blog.service.CommentService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -27,43 +27,44 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping()
-    public String createComment(@ModelAttribute("comment") @Valid CommentRequestDto commentRequestDto,
-                             BindingResult bindingResult) {
+    @PostMapping("/{postId}")
+    public String createComment(@PathVariable("postId") UUID postId,
+                                @ModelAttribute("comment") @Valid CommentRequestDto commentRequestDto,
+                                BindingResult bindingResult) {
         log.info("Received request to create a new comment {}", commentRequestDto);
         if (bindingResult.hasErrors()) {
-            log.error("Data not validated {}",  bindingResult.getAllErrors());
-            return "redirect:/public/api/v1/posts";
+            log.error("Data not validated {}", bindingResult.getAllErrors());
+            return "redirect:/public/api/v1/comments/{postId}";
         }
-        commentService.save(commentRequestDto);
-        return "redirect:/public/api/v1/posts";
+        commentService.save(commentRequestDto, postId);
+        return "redirect:/public/api/v1/posts/{postId}";
     }
 
     @GetMapping("/{commentId}/edit")
     public String updateComment(@PathVariable("commentId") UUID commentId, Model model) {
-        CommentResponseDto commentResponseDto = commentService.getById(commentId);
+        CommentResponseDto commentResponseDto = commentService.getByCommentId(commentId);
         log.info("Received request to update a comment {}", commentResponseDto);
-        model.addAttribute("post", commentResponseDto);
-        return "post/update-comment";
+        model.addAttribute("comment", commentResponseDto);
+        return "comment/update-comment";
     }
 
     @PatchMapping("/{commentId}")
     public String updateComment(@PathVariable("commentId") UUID commentId,
-                             @ModelAttribute("comment") @Valid CommentRequestDto commentRequestDto,
-                             BindingResult bindingResult) {
-        log.info("Update request received of comment {} with new data {}", commentId, commentRequestDto);
+                                @ModelAttribute("comment") @Valid CommentResponseDto commentResponseDto,
+                                BindingResult bindingResult) {
+        log.info("Update request received of comment {} with new data {}", commentId, commentResponseDto);
         if (bindingResult.hasErrors()) {
-            log.error("Data not validated {}",  bindingResult.getAllErrors());
-            return "post/update-comment";
+            log.error("Data not validated {}", bindingResult.getAllErrors());
+            return "comment/update-comment";
         }
-        commentService.update(commentId, commentRequestDto);
+        commentService.update(commentId, commentResponseDto);
         return "redirect:/public/api/v1/posts";
     }
 
-    @DeleteMapping("/{commentId}")
-    public String deleteComment(@PathVariable("commentId") UUID commentId) {
+    @DeleteMapping("/{postId}/{commentId}")
+    public String deleteComment(@PathVariable("postId") UUID postId, @PathVariable("commentId") UUID commentId) {
         log.info("Received request to delete a comment {}", commentId);
         commentService.delete(commentId);
-        return "redirect:/public/api/v1/posts";
+        return "redirect:/public/api/v1/posts/{postId}";
     }
 }

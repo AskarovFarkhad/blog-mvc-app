@@ -1,9 +1,8 @@
 package com.blog.controller;
 
-import com.blog.dto.CommentRequestDto;
-import com.blog.dto.PostRequestDto;
-import com.blog.dto.PostResponseDto;
-import com.blog.service.CommentService;
+import com.blog.dto.comment.CommentRequestDto;
+import com.blog.dto.post.PostRequestDto;
+import com.blog.dto.post.PostResponseDto;
 import com.blog.service.PostService;
 import com.blog.service.UserService;
 import jakarta.validation.Valid;
@@ -27,13 +26,10 @@ public class PostController {
 
     private final UserService userService;
 
-    private final CommentService commentService;
-
     @Autowired
-    public PostController(PostService postService, UserService userService, CommentService commentService) {
+    public PostController(PostService postService, UserService userService) {
         this.postService = postService;
         this.userService = userService;
-        this.commentService = commentService;
     }
 
     @PostMapping()
@@ -88,9 +84,8 @@ public class PostController {
     public String getPost(@PathVariable("postId") UUID postId, Model model) {
         log.info("Received request to get post and comment of this post");
         model.addAttribute("post", postService.getById(postId));
-        model.addAttribute("comments", commentService.getById(postId));
-        model.addAttribute("comment", new CommentRequestDto());
         model.addAttribute("authors", userService.getAllUsers());
+        model.addAttribute("comment", new CommentRequestDto());
         return "post/get-post";
     }
 }

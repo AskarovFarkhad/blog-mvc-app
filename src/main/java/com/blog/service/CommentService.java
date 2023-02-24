@@ -1,15 +1,14 @@
 package com.blog.service;
 
 import com.blog.dao.CommentDao;
-import com.blog.dto.CommentRequestDto;
-import com.blog.dto.CommentResponseDto;
+import com.blog.dto.comment.CommentRequestDto;
+import com.blog.dto.comment.CommentResponseDto;
 import com.blog.mapper.CommentMapper;
 import com.blog.model.Comment;
 import com.blog.util.ConverterResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,26 +27,27 @@ public class CommentService {
         this.converterResultSet = converterResultSet;
     }
 
-    public int save(CommentRequestDto commentRequestDto) {
+    public int save(CommentRequestDto commentRequestDto, UUID postId) {
         Comment comment = mapper.toComment(commentRequestDto);
+        comment.setPostId(postId);
         return commentDao.save(comment);
     }
 
-    public CommentResponseDto getById(UUID postId) {
+    public CommentResponseDto getByPostId(UUID postId) {
         return converterResultSet.convertSetToCommentDto(commentDao.getById(postId));
     }
 
-    public void update(UUID commentId, CommentRequestDto dto) {
-        CommentResponseDto commentResponseDto = getById(commentId);
+    public CommentResponseDto getByCommentId(UUID commentId) {
+        return converterResultSet.convertSetToCommentDto(commentDao.getByCommentId(commentId));
+    }
+
+    public void update(UUID commentId, CommentResponseDto dto) {
+        CommentResponseDto commentResponseDto = getByCommentId(commentId);
         commentResponseDto.setContent(dto.getContent());
         commentDao.update(mapper.toComment(commentResponseDto));
     }
 
     public void delete(UUID commentId) {
         commentDao.delete(commentId);
-    }
-
-    public List<CommentResponseDto> getAll() {
-        return converterResultSet.convertSetCommentToList(commentDao.getAll());
     }
 }

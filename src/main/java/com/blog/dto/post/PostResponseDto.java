@@ -1,9 +1,13 @@
-package com.blog.dto;
+package com.blog.dto.post;
 
+import com.blog.dto.UserDto;
+import com.blog.dto.comment.CommentResponseDto;
+import com.blog.dto.tag.TagItemResponseDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -22,15 +26,22 @@ public class PostResponseDto {
 
     private UserDto author;
 
+    private List<CommentResponseDto> comments;
+
+    private List<TagItemResponseDto> tags;
+
     public PostResponseDto() {
     }
 
-    public PostResponseDto(UUID postId, String title, String content, LocalDateTime createdAt, UserDto author) {
+    public PostResponseDto(UUID postId, String title, String content, LocalDateTime createdAt, UserDto author,
+                           List<CommentResponseDto> comments, List<TagItemResponseDto> tags) {
         this.postId = postId;
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
         this.author = author;
+        this.comments = comments;
+        this.tags = tags;
     }
 
     public UUID getPostId() {
@@ -73,6 +84,22 @@ public class PostResponseDto {
         this.author = author;
     }
 
+    public List<CommentResponseDto> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentResponseDto> comments) {
+        this.comments = comments;
+    }
+
+    public List<TagItemResponseDto> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagItemResponseDto> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -88,12 +115,14 @@ public class PostResponseDto {
 
     @Override
     public String toString() {
-        return "PostDto{" +
+        return "PostResponseDto{" +
                 "postId=" + postId +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
                 ", author=" + author +
+                ", comments=" + comments +
+                ", tags=" + tags +
                 '}';
     }
 }

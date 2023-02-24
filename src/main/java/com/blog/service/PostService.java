@@ -1,8 +1,8 @@
 package com.blog.service;
 
 import com.blog.dao.PostDao;
-import com.blog.dto.PostRequestDto;
-import com.blog.dto.PostResponseDto;
+import com.blog.dto.post.PostRequestDto;
+import com.blog.dto.post.PostResponseDto;
 import com.blog.mapper.PostMapper;
 import com.blog.model.Post;
 import com.blog.util.ConverterResultSet;

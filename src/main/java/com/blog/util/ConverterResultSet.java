@@ -1,10 +1,13 @@
 package com.blog.util;
 
+import com.blog.dao.CommentDao;
 import com.blog.dao.PostDao;
+import com.blog.dao.TagItemDao;
 import com.blog.dao.UserDao;
-import com.blog.dto.CommentResponseDto;
-import com.blog.dto.PostResponseDto;
 import com.blog.dto.UserDto;
+import com.blog.dto.comment.CommentResponseDto;
+import com.blog.dto.post.PostResponseDto;
+import com.blog.dto.tag.TagItemResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +29,16 @@ public class ConverterResultSet {
 
     private final PostDao postDao;
 
+    private final CommentDao commentDao;
+
+    private final TagItemDao tagItemDao;
+
     @Autowired
-    public ConverterResultSet(UserDao userDao, PostDao postDao) {
+    public ConverterResultSet(UserDao userDao, PostDao postDao, CommentDao commentDao, TagItemDao tagItemDao) {
         this.userDao = userDao;
         this.postDao = postDao;
+        this.commentDao = commentDao;
+        this.tagItemDao = tagItemDao;
     }
 
     public List<UserDto> convertResultSetToListUserDto(Optional<ResultSet> optionalResultSet) {
@@ -75,7 +84,9 @@ public class ConverterResultSet {
                         resultSet.getString("title"),
                         resultSet.getString("content"),
                         resultSet.getTimestamp("created_at").toLocalDateTime(),
-                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id"))))
+                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id")))),
+                        convertSetCommentToList(commentDao.getById(UUID.fromString(resultSet.getString("post_id")))),
+                        convertSetTagItemToList(tagItemDao.getById(UUID.fromString(resultSet.getString("post_id"))))
                 ));
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -94,7 +105,9 @@ public class ConverterResultSet {
                         resultSet.getString("title"),
                         resultSet.getString("content"),
                         resultSet.getTimestamp("created_at").toLocalDateTime(),
-                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id"))))
+                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id")))),
+                        convertSetCommentToList(commentDao.getById(UUID.fromString(resultSet.getString("post_id")))),
+                        convertSetTagItemToList(tagItemDao.getById(UUID.fromString(resultSet.getString("post_id"))))
                 );
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -112,8 +125,7 @@ public class ConverterResultSet {
                         UUID.fromString(resultSet.getString("comment_id")),
                         resultSet.getString("content"),
                         resultSet.getTimestamp("created_at").toLocalDateTime(),
-                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id")))),
-                        convertSetToPostDto(userDao.getById(UUID.fromString(resultSet.getString("post_id"))))
+                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id"))))
                 ));
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -131,8 +143,7 @@ public class ConverterResultSet {
                         UUID.fromString(resultSet.getString("comment_id")),
                         resultSet.getString("content"),
                         resultSet.getTimestamp("created_at").toLocalDateTime(),
-                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id")))),
-                        convertSetToPostDto(userDao.getById(UUID.fromString(resultSet.getString("post_id"))))
+                        convertSetToUserDto(userDao.getById(UUID.fromString(resultSet.getString("user_id"))))
                 );
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -140,5 +151,21 @@ public class ConverterResultSet {
                     e.getMessage());
         }
         return commentResponseDto;
+    }
+
+    public List<TagItemResponseDto> convertSetTagItemToList(Optional<ResultSet> optResultSetPost) {
+        List<TagItemResponseDto> tags = new ArrayList<>();
+        try (ResultSet resultSet = optResultSetPost.orElseThrow(ClassNotFoundException::new)) {
+            while (resultSet.next()) {
+                tags.add(new TagItemResponseDto(
+                        UUID.fromString(resultSet.getString("tag_id")),
+                        resultSet.getString("name")
+                ));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            log.error("An error occurred while converting the parameters of the ResultSet object with databases: {}",
+                    e.getMessage());
+        }
+        return tags;
     }
 }

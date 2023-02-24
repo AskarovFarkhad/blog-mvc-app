@@ -1,4 +1,4 @@
-package com.blog.dto;
+package com.blog.dto.tag;
 
 
 import jakarta.validation.constraints.NotBlank;

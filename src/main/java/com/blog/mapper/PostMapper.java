@@ -1,7 +1,7 @@
 package com.blog.mapper;
 
-import com.blog.dto.PostRequestDto;
-import com.blog.dto.PostResponseDto;
+import com.blog.dto.post.PostRequestDto;
+import com.blog.dto.post.PostResponseDto;
 import com.blog.model.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

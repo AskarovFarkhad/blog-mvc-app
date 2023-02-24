@@ -1,5 +1,6 @@
-package com.blog.dto;
+package com.blog.dto.comment;
 
+import com.blog.dto.UserDto;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
@@ -14,19 +15,16 @@ public class CommentResponseDto {
 
     private LocalDateTime createdAt;
 
-    private UserDto userId;
-
-    private PostResponseDto postId;
+    private UserDto author;
 
     public CommentResponseDto() {
     }
 
-    public CommentResponseDto(UUID commentId, String content, LocalDateTime createdAt, UserDto userId, PostResponseDto postId) {
+    public CommentResponseDto(UUID commentId, String content, LocalDateTime createdAt, UserDto author) {
         this.commentId = commentId;
         this.content = content;
         this.createdAt = createdAt;
-        this.userId = userId;
-        this.postId = postId;
+        this.author = author;
     }
 
     public UUID getCommentId() {
@@ -53,20 +51,12 @@ public class CommentResponseDto {
         this.createdAt = createdAt;
     }
 
-    public UserDto getUserId() {
-        return userId;
+    public UserDto getAuthor() {
+        return author;
     }
 
-    public void setUserId(UserDto userId) {
-        this.userId = userId;
-    }
-
-    public PostResponseDto getPostId() {
-        return postId;
-    }
-
-    public void setPostId(PostResponseDto postId) {
-        this.postId = postId;
+    public void setAuthor(UserDto userId) {
+        this.author = userId;
     }
 
     @Override
@@ -75,8 +65,7 @@ public class CommentResponseDto {
                 "commentId=" + commentId +
                 ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
-                ", userId=" + userId +
-                ", postId=" + postId +
+                ", userId=" + author +
                 '}';
     }
 }
