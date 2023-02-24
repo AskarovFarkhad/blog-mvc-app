@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Публикация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            resize: none;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        td {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .button-link {
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .button-link:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+
+<div class="publication-form">
+    <h1>Название: <span th:text="${post.getTitle()}"></span></h1>
+    <p class="author">Автор: <span th:text="${post.getAuthor().getUserName()}"></span></p>
+    <p class="date">Дата создания: <span th:text="${#temporals.format(post.getCreatedAt(), 'dd.MM.yyyy')}"></span></p>
+    <p class="content">Содержание: <span th:text="${post.getContent()}"></span></p>
+
+    <form method="POST" th:action="@{/public/api/v1/tags/{postId}(postId=${post.getPostId()})}" th:object="${tag}">
+        <h3>Добавить тег</h3>
+        <label for="name">Тег:</label>
+        <input type="text" id="name" name="name" th:field="*{name}">
+        <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Validation error</div>
+        <br>
+        <button type="submit">Добавить</button>
+    </form>
+
+    <div th:class="comments-list">
+        <h2>Теги</h2>
+        <ul class="tags">
+            <li th:each="tag : ${post.getTags()}">
+                <span th:text="${tag.getName()}"></span>
+                <form th:method="GET"
+                      th:action="@{/public/api/v1/tags/{tagId}/edit(tagId=${tag.getTagId()})}">
+                    <button class="btn btn-danger" type="submit">Изменить</button>
+                </form>
+                <form th:method="DELETE"
+                      th:action="@{/public/api/v1/tags/{postId}/{tagId}(postId=${post.getPostId()},tagId=${tag.getTagId()})}">
+                    <input class="button-link" type="submit" value="Удалить">
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<form class="comments-list" method="POST" th:action="@{/public/api/v1/comments/{postId}(postId=${post.getPostId()})}"
+      th:object="${comment}">
+    <h3>Добавить комментарий</h3>
+    <label for="content">Комментарий:</label>
+    <input type="text" id="content" name="content" th:field="*{content}">
+    <div style="color: red" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Validation error</div>
+
+    <label for="author">Автор:</label>
+    <select class="form-control" id="author" name="author" th:field="*{author}">
+        <option value="">Выберите автора</option>
+        <option th:each="author : ${authors}" th:value="${author.getUserId()}"
+                th:text="${author.getUserName()}"></option>
+    </select>
+    <div style="color: red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Validation error</div>
+    <br>
+    <button type="submit">Опубликовать</button>
+</form>
+
+<div class="comments">
+    <h2>Комментарии</h2>
+    <ul class="comments-list">
+        <li th:each="comment : ${post.getComments()}">
+            <p class="author">Автор: <span th:text="${comment.getAuthor().getUserName()}"></span></p>
+            <p class="date">Дата: <span th:text="${#temporals.format(comment.getCreatedAt(), 'dd.MM.yyyy')}"></span></p>
+            <p class="text" th:text="${comment.getContent()}"></p>
+            <form th:method="GET"
+                  th:action="@{/public/api/v1/comments/{commentId}/edit(commentId=${comment.getCommentId()})}">
+                <button class="btn btn-danger" type="submit">Изменить</button>
+            </form>
+            <form th:method="DELETE"
+                  th:action="@{/public/api/v1/comments/{postId}/{commentId}(postId=${post.getPostId()},commentId=${comment.getCommentId()})}"
+                  th:object="${comment}">
+                <button class="btn btn-danger" type="submit">Удалить</button>
+            </form>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>
+
+<!--
+<a class="button-link"
+   th:href="@{/public/api/v1/comments/{commentId}/edit(commentId=${comment.getCommentId()})}">
+    Изменить</a>-->

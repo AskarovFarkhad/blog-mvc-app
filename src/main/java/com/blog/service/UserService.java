@@ -1,34 +1,39 @@
 package com.blog.service;
 
-import com.blog.dto.UserDto;
+import com.blog.dao.UserDao;
+import com.blog.dto.user.UserDto;
 import com.blog.mapper.UserMapper;
 import com.blog.model.User;
-import com.blog.dao.UserDao;
-import com.blog.util.ConverterSetUsers;
-import lombok.RequiredArgsConstructor;
+import com.blog.util.ConverterResultSet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
-    private final UserDao repository;
+    private final UserDao userDao;
 
     private final UserMapper mapper;
 
+    private final ConverterResultSet converterResultSet;
+
+    @Autowired
+    public UserService(UserDao userDao, UserMapper mapper, ConverterResultSet converterResultSet) {
+        this.userDao = userDao;
+        this.mapper = mapper;
+        this.converterResultSet = converterResultSet;
+    }
+
     public int save(UserDto dto) {
         User user = mapper.toUser(dto);
-        user.setUserId(UUID.randomUUID());
-        return repository.save(user);
+        return userDao.save(user);
     }
 
     public UserDto getById(UUID userId) {
-        ResultSet resultSet = repository.getById(userId);
-        return ConverterSetUsers.convertSetToUserDto(resultSet);
+        return converterResultSet.convertSetToUserDto(userDao.getById(userId));
     }
 
     public void update(UUID userId, UserDto dto) {
@@ -36,14 +41,14 @@ public class UserService {
         userDto.setUserName(dto.getUserName());
         userDto.setEmail(dto.getEmail());
         userDto.setPassword(dto.getPassword());
-        repository.update(mapper.toUser(userDto));
+        userDao.update(mapper.toUser(userDto));
     }
 
     public void delete(UUID userId) {
-        repository.delete(userId);
+        userDao.delete(userId);
     }
 
     public List<UserDto> getAllUsers() {
-        return ConverterSetUsers.convertSetToList(repository.getAll());
+        return converterResultSet.convertResultSetToListUserDto(userDao.getAll());
     }
 }

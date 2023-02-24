@@ -1,31 +1,37 @@
-package com.blog.model;
+package com.blog.dto.user;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class User {
+public class UserDto {
 
     private UUID userId;
 
+    @NotEmpty(message = "\"Name\" field must not be empty")
+    @Size(min = 2, message = "\"Name\" field should be don't less 2 characters long")
     private String userName;
 
+    @Email(message = "\"Email\" field should be valid")
+    @NotBlank(message = "\"Email\" field must not be empty")
     private String email;
 
+    @NotBlank(message = "\"Password\" field must not be empty")
+    @Size(min = 8, message = "\"Password\" field should be don't less 8 characters long")
     private String password;
 
-    private boolean isDeleted;
-
-    private boolean isAdmin;
-
-    public User() {
+    public UserDto() {
     }
 
-    public User(String userName, String email, String password, boolean isDeleted, boolean isAdmin) {
+    public UserDto(UUID userId, String userName, String email, String password) {
+        this.userId = userId;
         this.userName = userName;
         this.email = email;
         this.password = password;
-        this.isDeleted = isDeleted;
-        this.isAdmin = isAdmin;
     }
 
     public UUID getUserId() {
@@ -60,28 +66,12 @@ public class User {
         this.password = password;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return userId.equals(user.userId);
+        UserDto userDto = (UserDto) o;
+        return userId.equals(userDto.userId);
     }
 
     @Override
@@ -91,13 +81,11 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserDto{" +
                 "userId=" + userId +
                 ", userName='" + userName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", isDeleted=" + isDeleted +
-                ", isAdmin=" + isAdmin +
                 '}';
     }
 }

@@ -53,12 +53,15 @@
     <h2>Добавление пользователя</h2>
     <label for="userName">Имя пользователя:</label>
     <input type="text" id="userName" th:field="*{userName}" name="userName" placeholder="Введите имя пользователя">
+    <div style="color: red" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">Validation error</div>
 
     <label for="email">Email:</label>
     <input type="email" id="email" th:field="*{email}" name="email" placeholder="Введите email">
+    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Validation error</div>
 
     <label for="password">Пароль:</label>
     <input type="password" id="password" th:field="*{password}" name="password" placeholder="Введите пароль">
+    <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Validation error</div>
 
     <input type="submit" value="Добавить">
 </form>

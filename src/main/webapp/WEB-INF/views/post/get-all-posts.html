@@ -10,7 +10,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 20px auto;
             display: flex;
             flex-direction: column;
@@ -59,19 +59,25 @@
         }
 
         table {
+            margin: 20px auto;
             border-collapse: collapse;
             border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: #fff;
+            max-width: 800px;
             width: 100%;
-            margin-bottom: 20px;
         }
 
         th, td {
-            text-align: left;
-            padding: 8px;
-            word-wrap: break-word;
+            padding: 10px;
             border: 1px solid #ccc;
+        }
+
+        td {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         th {
@@ -99,29 +105,33 @@
         .button-link:hover {
             background-color: #3e8e41;
         }
-
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Главная страница</h1>
     <div>
-        <a href="/public/api/v1/users/new" class="button-link">Регистрация</a>
+        <a href="/public/api/v1/users/new" class="button-link">Добавить пользователя</a>
         <a href="/public/api/v1/users/all" class="button-link">Все пользователи</a>
     </div>
 
     <form th:method="POST" th:action="@{/public/api/v1/posts}" th:object="${post}">
         <label for="title">Название:</label>
         <input type="text" id="title" name="title" th:field="*{title}">
+        <div style="color: red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Validation error</div>
+
         <label for="content">Текст:</label>
         <textarea id="content" name="content" th:field="*{content}"></textarea>
+        <div style="color: red" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Validation error</div>
+
         <label for="author">Автор:</label>
         <select class="form-control" id="author" name="author" th:field="*{author}">
             <option value="">Выберите автора</option>
             <option th:each="author : ${authors}" th:value="${author.getUserId()}"
                     th:text="${author.getUserName()}"></option>
         </select>
-        <br><br>
+        <div style="color: red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Validation error</div>
+        <br>
         <button type="submit">Опубликовать</button>
     </form>
 
@@ -132,15 +142,25 @@
             <th>Текст</th>
             <th>Автор</th>
             <th>Дата публикации</th>
-            <th>Действия</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="post : ${posts}">
-            <td th:text="${post.getTitle()}"></td>
+            <td>
+                <a th:href="@{/public/api/v1/posts/{postId}(postId=${post.getPostId()})}"
+                   th:text="${post.getTitle()}">
+                </a>
+            </td>
             <td th:text="${post.getContent()}"></td>
-            <td th:text="${post.getAuthor()}"></td>
+            <td th:text="${post.getAuthor().getUserName()}"></td>
             <td th:text="${#temporals.format(post.getCreatedAt(), 'dd.MM.yyyy HH:mm')}"></td>
+            <td>
+                <a class="button-link"
+                   th:href="@{/public/api/v1/posts/{postId}/edit(postId=${post.getPostId()})}">Изменить</a>
+                <br>
+            </td>
             <td>
                 <form th:method="DELETE"
                       th:action="@{/public/api/v1/posts/{postId}(postId=${post.getPostId()})}">
